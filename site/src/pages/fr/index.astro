@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CategoryHub from '../../components/CategoryHub.astro';
+import Hero3D from '../../components/Hero3D.astro';
+import { dict } from '../../utils/i18n';
+const lang = 'fr' as const;
+const t = dict(lang);
+---
+<Layout lang={lang}>
+  <section class="hero">
+    <div class="container">
+      <Hero3D />
+      <div class="hero-tag">{t.site.subtitle}</div>
+      <h1 class="hero-title">{t.site.title}</h1>
+      <p class="hero-subtitle">{t.site.tagline}</p>
+    </div>
+  </section>
+  <CategoryHub lang={lang} />
+</Layout>

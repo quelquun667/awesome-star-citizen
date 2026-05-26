@@ -1,0 +1,64 @@
+{
+  "site": {
+    "title": "MobiGlas OS",
+    "subtitle": "Outils & Liens pour Star Citizen",
+    "tagline": "Un annuaire sélectionné des meilleurs outils, sites et ressources pour le 'Verse."
+  },
+  "nav": {
+    "github": "GitHub",
+    "contribute": "Contribuer",
+    "readme": "README"
+  },
+  "search": {
+    "placeholder": "Chercher un outil, une catégorie…",
+    "noResults": "Aucun outil ne correspond à votre recherche.",
+    "resultCount": "{count} outil(s) trouvé(s)"
+  },
+  "filters": {
+    "all": "Tous",
+    "categories": "Catégories",
+    "flags": "Filtres",
+    "clear": "Réinitialiser"
+  },
+  "categories": {
+    "ships-gear": "Vaisseaux & Équipements",
+    "trade-logistics": "Commerce & Logistique",
+    "databases": "Bases de données",
+    "wikis-lore": "Wikis & Lore",
+    "maps-navigation": "Cartes & Navigation",
+    "org-fleet": "Org & Flotte",
+    "community-news": "Communauté & Actu"
+  },
+  "categoryDesc": {
+    "ships-gear": "Planificateurs de loadout, bases de vaisseaux et composants.",
+    "trade-logistics": "Prix des marchandises, routes commerciales et logistique de cargo.",
+    "databases": "Données brutes du jeu, index d'objets et références.",
+    "wikis-lore": "Wikis communautaires, archives de lore et Galactapedia.",
+    "maps-navigation": "Cartes stellaires et outils de navigation.",
+    "org-fleet": "Plateformes d'org, gestion de flotte et recrutement.",
+    "community-news": "Forums, subreddits et médias d'actualité."
+  },
+  "hub": {
+    "intro": "Parcourez par catégorie, ou cherchez dans tout l'annuaire.",
+    "toolsCount": "{count} outil(s)",
+    "openCategory": "Ouvrir la catégorie",
+    "backToHub": "Retour aux catégories",
+    "globalResultsTitle": "Résultats de recherche"
+  },
+  "flags": {
+    "website": "Site web",
+    "account-required": "Compte requis",
+    "extension": "Extension / appli",
+    "paid": "Payant / freemium",
+    "community": "Communautaire"
+  },
+  "card": {
+    "open": "Ouvrir",
+    "visit": "Visiter"
+  },
+  "footer": {
+    "disclaimer": "Star Citizen et toutes les ressources associées sont © Cloud Imperium Games. Ce projet est non officiel et n'est pas affilié à CIG.",
+    "license": "Contenu sous licence CC BY-SA 4.0",
+    "sourceOnGithub": "Source sur GitHub"
+  }
+}

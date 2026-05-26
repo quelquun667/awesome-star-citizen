@@ -1,0 +1,170 @@
+---
+import { tools, categories, flagDefs, type ToolFlag } from '../utils/tools';
+import { CATEGORY_ICONS } from '../utils/categoryMeta';
+import { dict, type Lang } from '../utils/i18n';
+
+interface Props { lang: Lang; categoryId: string; }
+const { lang, categoryId } = Astro.props;
+const t = dict(lang);
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const langPrefix = lang === 'en' ? '' : `/${lang}`;
+
+const catLabels = t.categories as Record<string, string>;
+const catDescs  = t.categoryDesc as Record<string, string>;
+const flagLabels = t.flags as Record<string, string>;
+
+const category = categories.find((c) => c.id === categoryId);
+const categoryLabel = catLabels[categoryId] ?? category?.label ?? categoryId;
+const categoryDesc = catDescs[categoryId] ?? '';
+const list = tools.filter((tool) => tool.category === categoryId);
+
+const flagOrder: ToolFlag[] = ['website', 'account-required', 'extension', 'paid', 'community'];
+
+function domain(url: string) {
+  try { return new URL(url).hostname.replace(/^www\./, ''); }
+  catch { return url; }
+}
+---
+
+<section class="cat-header">
+  <div class="container">
+    <a class="back-link" href={`${base}${langPrefix}/`}>← {t.hub.backToHub}</a>
+    <div class="cat-header-inner">
+      <div class="cat-header-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" set:html={CATEGORY_ICONS[categoryId] ?? ''} />
+      </div>
+      <div>
+        <h1 class="cat-header-title">{categoryLabel}</h1>
+        <p class="cat-header-desc">{categoryDesc}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="search-section">
+  <div class="container">
+    <div class="search-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+      <input
+        id="search"
+        class="search-input"
+        type="search"
+        autocomplete="off"
+        placeholder={t.search.placeholder}
+        aria-label={t.search.placeholder}
+      />
+    </div>
+    <div class="result-count" id="result-count" data-template={t.search.resultCount}></div>
+  </div>
+</section>
+
+<section class="filters">
+  <div class="container">
+    <div class="filter-row" role="group" aria-label={t.filters.flags}>
+      <span class="filter-label">{t.filters.flags}</span>
+      {flagOrder.map((f) => (
+        <button class="chip chip-flag" data-filter="flag" data-value={f} aria-pressed="false" title={flagLabels[f]}>
+          <span aria-hidden="true">{flagDefs[f].icon}</span>
+          <span>{flagLabels[f]}</span>
+        </button>
+      ))}
+      <button class="chip chip-clear" id="clear-filters" type="button">{t.filters.clear}</button>
+    </div>
+  </div>
+</section>
+
+<section class="container">
+  <div class="tools-grid" id="grid">
+    {list.map((tool) => (
+      <article
+        class="tool-card"
+        data-name={tool.name.toLowerCase()}
+        data-desc={tool.description.toLowerCase()}
+        data-flags={tool.flags.join(' ')}
+      >
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">{tool.name}</h3>
+            <span class="card-domain">{domain(tool.url)}</span>
+          </div>
+          <div class="card-flags">
+            {tool.flags.map((f) => (
+              <span class="card-flag" title={flagLabels[f]} aria-label={flagLabels[f]}>
+                {flagDefs[f].icon}
+              </span>
+            ))}
+          </div>
+        </div>
+        <p class="card-desc">{tool.description}</p>
+        <div class="card-foot">
+          <span class="card-category">{categoryLabel}</span>
+          <a class="card-visit" href={tool.url} target="_blank" rel="noopener">{t.card.visit}</a>
+        </div>
+      </article>
+    ))}
+  </div>
+  <div class="no-results" id="no-results" hidden>{t.search.noResults}</div>
+</section>
+
+<script>
+  type Filter = { flags: Set<string>; query: string };
+  const state: Filter = { flags: new Set<string>(), query: '' };
+
+  const grid = document.getElementById('grid') as HTMLElement;
+  const cards = Array.from(grid.querySelectorAll<HTMLElement>('.tool-card'));
+  const search = document.getElementById('search') as HTMLInputElement;
+  const noResults = document.getElementById('no-results') as HTMLElement;
+  const counter = document.getElementById('result-count') as HTMLElement;
+  const counterTpl = counter.dataset.template ?? '{count}';
+
+  const flagChips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter="flag"]'));
+  const clearBtn = document.getElementById('clear-filters') as HTMLButtonElement;
+
+  function setPressed(btn: HTMLButtonElement, on: boolean) {
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+
+  function apply() {
+    let visible = 0;
+    for (const card of cards) {
+      const flags = (card.dataset.flags ?? '').split(' ');
+      const text = `${card.dataset.name} ${card.dataset.desc}`;
+      const matchFlags = state.flags.size === 0 || Array.from(state.flags).every((f) => flags.includes(f));
+      const matchQuery = !state.query || text.includes(state.query);
+      const show = matchFlags && matchQuery;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    }
+    noResults.hidden = visible !== 0;
+    counter.textContent = counterTpl.replace('{count}', String(visible));
+  }
+
+  flagChips.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const v = btn.dataset.value ?? '';
+      if (state.flags.has(v)) state.flags.delete(v);
+      else state.flags.add(v);
+      setPressed(btn, state.flags.has(v));
+      apply();
+    });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    state.flags.clear();
+    state.query = '';
+    search.value = '';
+    flagChips.forEach((b) => setPressed(b, false));
+    apply();
+  });
+
+  search.addEventListener('input', () => {
+    state.query = search.value.trim().toLowerCase();
+    apply();
+  });
+
+  apply();
+</script>

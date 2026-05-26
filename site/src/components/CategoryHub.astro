@@ -1,0 +1,131 @@
+---
+import { tools, categories, flagDefs } from '../utils/tools';
+import { CATEGORY_ICONS } from '../utils/categoryMeta';
+import { dict, type Lang } from '../utils/i18n';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = dict(lang);
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const langPrefix = lang === 'en' ? '' : `/${lang}`;
+
+const catLabels = t.categories as Record<string, string>;
+const catDescs  = t.categoryDesc as Record<string, string>;
+const flagLabels = t.flags as Record<string, string>;
+const toolsCountTpl = t.hub.toolsCount;
+
+const counts: Record<string, number> = {};
+for (const tool of tools) {
+  counts[tool.category] = (counts[tool.category] ?? 0) + 1;
+}
+
+function domain(url: string) {
+  try { return new URL(url).hostname.replace(/^www\./, ''); }
+  catch { return url; }
+}
+---
+
+<section class="hub-search">
+  <div class="container">
+    <div class="search-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+      <input
+        id="global-search"
+        class="search-input"
+        type="search"
+        autocomplete="off"
+        placeholder={t.search.placeholder}
+        aria-label={t.search.placeholder}
+      />
+    </div>
+    <p class="hub-intro" id="hub-intro">{t.hub.intro}</p>
+  </div>
+</section>
+
+<section class="container">
+  <div class="cat-grid" id="cat-grid">
+    {categories.map((c) => (
+      <a class="cat-card" href={`${base}${langPrefix}/category/${c.id}/`}>
+        <div class="cat-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" set:html={CATEGORY_ICONS[c.id] ?? ''} />
+        </div>
+        <h3 class="cat-card-title">{catLabels[c.id] ?? c.label}</h3>
+        <p class="cat-card-desc">{catDescs[c.id] ?? ''}</p>
+        <div class="cat-card-foot">
+          <span class="cat-card-count">{toolsCountTpl.replace('{count}', String(counts[c.id] ?? 0))}</span>
+          <span class="cat-card-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  <!-- Global search results, hidden by default -->
+  <div class="global-results" id="global-results" hidden>
+    <h2 class="global-results-title">{t.hub.globalResultsTitle}</h2>
+    <div class="tools-grid">
+      {tools.map((tool) => (
+        <article
+          class="tool-card global-result"
+          data-name={tool.name.toLowerCase()}
+          data-desc={tool.description.toLowerCase()}
+          data-category={tool.category}
+        >
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">{tool.name}</h3>
+              <span class="card-domain">{domain(tool.url)}</span>
+            </div>
+            <div class="card-flags">
+              {tool.flags.map((f) => (
+                <span class="card-flag" title={flagLabels[f]} aria-label={flagLabels[f]}>
+                  {flagDefs[f].icon}
+                </span>
+              ))}
+            </div>
+          </div>
+          <p class="card-desc">{tool.description}</p>
+          <div class="card-foot">
+            <span class="card-category">{catLabels[tool.category] ?? tool.category}</span>
+            <a class="card-visit" href={tool.url} target="_blank" rel="noopener">{t.card.visit}</a>
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="no-results" id="global-no-results" hidden>{t.search.noResults}</div>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('global-search') as HTMLInputElement;
+  const grid = document.getElementById('cat-grid') as HTMLElement;
+  const results = document.getElementById('global-results') as HTMLElement;
+  const intro = document.getElementById('hub-intro') as HTMLElement;
+  const noRes = document.getElementById('global-no-results') as HTMLElement;
+  const cards = Array.from(results.querySelectorAll<HTMLElement>('.global-result'));
+
+  function update() {
+    const q = input.value.trim().toLowerCase();
+    if (!q) {
+      grid.hidden = false;
+      results.hidden = true;
+      intro.hidden = false;
+      return;
+    }
+    grid.hidden = true;
+    intro.hidden = true;
+    results.hidden = false;
+    let visible = 0;
+    for (const c of cards) {
+      const text = `${c.dataset.name} ${c.dataset.desc}`;
+      const show = text.includes(q);
+      c.style.display = show ? '' : 'none';
+      if (show) visible++;
+    }
+    noRes.hidden = visible !== 0;
+  }
+  input.addEventListener('input', update);
+</script>
