@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "updated": "2026-05-26",
+  "categories": [
+    { "id": "ships-gear",      "label": "Ships & Gear" },
+    { "id": "trade-logistics", "label": "Trade & Logistics" },
+    { "id": "databases",       "label": "Databases & Reference" },
+    { "id": "wikis-lore",      "label": "Wikis & Lore" },
+    { "id": "maps-navigation", "label": "Maps & Navigation" },
+    { "id": "org-fleet",       "label": "Org & Fleet Management" },
+    { "id": "community-news",  "label": "Community & News" }
+  ],
+  "flags": {
+    "website":          { "icon": "🌐", "label": "Website" },
+    "account-required": { "icon": "🔒", "label": "Account required" },
+    "extension":        { "icon": "🧩", "label": "Extension / app" },
+    "paid":             { "icon": "💰", "label": "Paid / freemium" },
+    "community":        { "icon": "⚠️", "label": "Community-maintained" }
+  },
+  "tools": [
+    {
+      "id": "erkul-games",
+      "name": "Erkul Games (DPS Calculator)",
+      "url": "https://www.erkul.games/",
+      "category": "ships-gear",
+      "description": "Ship loadout planner and DPS calculator. The reference tool for builds.",
+      "flags": ["website"]
+    },
+    {
+      "id": "fleetyards",
+      "name": "FleetYards",
+      "url": "https://fleetyards.net/",
+      "category": "ships-gear",
+      "description": "Ship database with detailed specs and component slots.",
+      "flags": ["website"]
+    },
+    {
+      "id": "ship-matrix",
+      "name": "Ship Matrix (Official)",
+      "url": "https://robertsspaceindustries.com/ship-matrix",
+      "category": "ships-gear",
+      "description": "Official CIG ship specs. Authoritative but updated slowly.",
+      "flags": ["website"]
+    },
+    {
+      "id": "ccugame",
+      "name": "CCU Game",
+      "url": "https://ccugame.app/",
+      "category": "ships-gear",
+      "description": "CCU upgrade path finder — calculates the cheapest chain of upgrades to reach a target ship.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "hangar-link",
+      "name": "Hangar.link",
+      "url": "https://hangar.link/",
+      "category": "ships-gear",
+      "description": "Track and manage your ship collection by linking your RSI account.",
+      "flags": ["website", "account-required", "community"]
+    },
+    {
+      "id": "starship42",
+      "name": "StarShip 42",
+      "url": "https://www.starship42.com/",
+      "category": "ships-gear",
+      "description": "3D ship viewer with size comparisons and detailed breakdowns.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "uex-corp",
+      "name": "UEX Corp",
+      "url": "https://uexcorp.space/",
+      "category": "trade-logistics",
+      "description": "Commodities, prices, trade routes, refineries. Community-driven, very complete.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "sc-trade-tools",
+      "name": "SC Trade Tools",
+      "url": "https://sc-trade.tools/",
+      "category": "trade-logistics",
+      "description": "Trade route optimizer with profit calculations.",
+      "flags": ["website"]
+    },
+    {
+      "id": "regolith-co",
+      "name": "Regolith Co",
+      "url": "https://regolith.rocks/",
+      "category": "trade-logistics",
+      "description": "Mining co-op tracker, refinery planner and mineral price database.",
+      "flags": ["website", "account-required", "community"]
+    },
+    {
+      "id": "scunpacked",
+      "name": "SC Unpacked",
+      "url": "https://scunpacked.com/",
+      "category": "databases",
+      "description": "Raw game data extracted from each patch.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "starcitizen-tools-wiki",
+      "name": "Star Citizen Wiki",
+      "url": "https://starcitizen.tools/",
+      "category": "wikis-lore",
+      "description": "Largest community-maintained wiki.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "rsi-starmap",
+      "name": "RSI Starmap",
+      "url": "https://robertsspaceindustries.com/starmap",
+      "category": "maps-navigation",
+      "description": "Official 3D star map of the persistent universe.",
+      "flags": ["website"]
+    },
+    {
+      "id": "rsi-spectrum",
+      "name": "RSI Spectrum",
+      "url": "https://robertsspaceindustries.com/spectrum",
+      "category": "org-fleet",
+      "description": "Official forum and chat platform for orgs and players.",
+      "flags": ["website", "account-required"]
+    },
+    {
+      "id": "reddit-starcitizen",
+      "name": "r/starcitizen",
+      "url": "https://www.reddit.com/r/starcitizen/",
+      "category": "community-news",
+      "description": "Main Star Citizen subreddit.",
+      "flags": ["website"]
+    },
+    {
+      "id": "inn",
+      "name": "Imperial News Network (INN)",
+      "url": "https://imperialnews.network/",
+      "category": "community-news",
+      "description": "Independent Star Citizen news outlet covering patches, lore and dev updates.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "rsi-status",
+      "name": "RSI Status",
+      "url": "https://status.robertsspaceindustries.com/",
+      "category": "community-news",
+      "description": "Official live status of RSI / Star Citizen servers and services.",
+      "flags": ["website"]
+    }
+  ]
+}
