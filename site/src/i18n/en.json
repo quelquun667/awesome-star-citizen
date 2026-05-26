@@ -1,0 +1,64 @@
+{
+  "site": {
+    "title": "MobiGlas OS",
+    "subtitle": "Tools & Links for Star Citizen",
+    "tagline": "A curated directory of the best tools, websites and resources for the 'Verse."
+  },
+  "nav": {
+    "github": "GitHub",
+    "contribute": "Contribute",
+    "readme": "README"
+  },
+  "search": {
+    "placeholder": "Search a tool, a category…",
+    "noResults": "No tool matches your search.",
+    "resultCount": "{count} tool(s) found"
+  },
+  "filters": {
+    "all": "All",
+    "categories": "Categories",
+    "flags": "Filters",
+    "clear": "Clear filters"
+  },
+  "categories": {
+    "ships-gear": "Ships & Gear",
+    "trade-logistics": "Trade & Logistics",
+    "databases": "Databases & Reference",
+    "wikis-lore": "Wikis & Lore",
+    "maps-navigation": "Maps & Navigation",
+    "org-fleet": "Org & Fleet",
+    "community-news": "Community & News"
+  },
+  "categoryDesc": {
+    "ships-gear": "Loadout planners, ship databases and component specs.",
+    "trade-logistics": "Commodity prices, trade routes and cargo planning.",
+    "databases": "Raw game data, item indexes and references.",
+    "wikis-lore": "Community wikis, lore archives and Galactapedia.",
+    "maps-navigation": "Star maps and navigation tools.",
+    "org-fleet": "Org platforms, fleet management and recruitment.",
+    "community-news": "Forums, subreddits and news outlets."
+  },
+  "hub": {
+    "intro": "Browse by category, or search across everything.",
+    "toolsCount": "{count} tool(s)",
+    "openCategory": "Open category",
+    "backToHub": "Back to all categories",
+    "globalResultsTitle": "Search results"
+  },
+  "flags": {
+    "website": "Website",
+    "account-required": "Account required",
+    "extension": "Extension / app",
+    "paid": "Paid / freemium",
+    "community": "Community-maintained"
+  },
+  "card": {
+    "open": "Open",
+    "visit": "Visit"
+  },
+  "footer": {
+    "disclaimer": "Star Citizen and all related assets are © Cloud Imperium Games. This project is unofficial and not affiliated with CIG.",
+    "license": "Content licensed under CC BY-SA 4.0",
+    "sourceOnGithub": "Source on GitHub"
+  }
+}

@@ -1,0 +1,17 @@
+---
+import { dict, type Lang } from '../utils/i18n';
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = dict(lang);
+const repoUrl = 'https://github.com/quelquun667/awesome-star-citizen';
+---
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>{t.footer.disclaimer}</div>
+    <div>
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">{t.footer.license}</a>
+      <span> · </span>
+      <a href={repoUrl} target="_blank" rel="noopener">{t.footer.sourceOnGithub}</a>
+    </div>
+  </div>
+</footer>

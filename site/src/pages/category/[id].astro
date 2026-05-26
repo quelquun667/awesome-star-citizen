@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CategoryView from '../../components/CategoryView.astro';
+import { categories } from '../../utils/tools';
+
+export async function getStaticPaths() {
+  return categories.map((c) => ({ params: { id: c.id } }));
+}
+
+const { id } = Astro.params;
+const lang = 'en' as const;
+---
+<Layout lang={lang}>
+  <CategoryView lang={lang} categoryId={id!} />
+</Layout>

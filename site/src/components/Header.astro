@@ -1,0 +1,28 @@
+---
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { dict, type Lang } from '../utils/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = dict(lang);
+
+const repoUrl = 'https://github.com/quelquun667/awesome-star-citizen';
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">SC</div>
+      <div class="brand-text">
+        <span class="brand-title">{t.site.title}</span>
+        <span class="brand-sub">{t.site.subtitle}</span>
+      </div>
+    </div>
+    <nav class="header-nav" aria-label="Primary">
+      <a class="nav-link" href={repoUrl} target="_blank" rel="noopener">{t.nav.github}</a>
+      <a class="nav-link" href={`${repoUrl}#contributing`} target="_blank" rel="noopener">{t.nav.contribute}</a>
+      <LanguageSwitcher lang={lang} />
+    </nav>
+  </div>
+</header>

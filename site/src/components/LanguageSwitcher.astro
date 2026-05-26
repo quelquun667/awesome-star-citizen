@@ -1,0 +1,28 @@
+---
+import { LANGS, type Lang } from '../utils/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function hrefFor(code: Lang): string {
+  return code === 'en' ? `${base}/` : `${base}/${code}/`;
+}
+---
+<div class="lang-switcher" role="group" aria-label="Language">
+  {LANGS.map(({ code, flag, label }) => (
+    <a
+      class={`lang-btn ${code === lang ? 'active' : ''}`}
+      href={hrefFor(code)}
+      lang={code}
+      aria-current={code === lang ? 'page' : undefined}
+      title={label}
+    >
+      <span aria-hidden="true">{flag}</span>
+      <span>{code.toUpperCase()}</span>
+    </a>
+  ))}
+</div>
