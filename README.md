@@ -2,6 +2,8 @@
 
 > A curated directory of the best tools, websites, and resources for **Star Citizen**.
 
+### 🌐 [Browse the interactive website →](https://quelquun667.github.io/awesome-star-citizen/)
+
 **🌍 Read this in another language:** [🇫🇷 Français](README.fr.md) · [🇪🇸 Español](README.es.md)
 
 [![Star Citizen](https://img.shields.io/badge/Star%20Citizen-Community-blue)](https://robertsspaceindustries.com/)
