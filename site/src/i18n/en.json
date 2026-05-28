@@ -54,11 +54,43 @@
   },
   "card": {
     "open": "Open",
-    "visit": "Visit"
+    "visit": "Visit",
+    "copy": "Copy link",
+    "copied": "Copied!"
   },
   "footer": {
     "disclaimer": "Star Citizen and all related assets are © Cloud Imperium Games. This project is unofficial and not affiliated with CIG.",
     "license": "Content licensed under CC BY-SA 4.0",
     "sourceOnGithub": "Source on GitHub"
+  },
+  "nav2": {
+    "tools": "Tools",
+    "prison": "Prison Calculator"
+  },
+  "prison": {
+    "title": "Prison Time Calculator",
+    "subtitle": "Klescher sentence reduction",
+    "tagline": "Work out how much ore you need to mine to clear your sentence — or how much time a given haul will shave off.",
+    "tabTimeToOre": "Time → Ore",
+    "tabOreToTime": "Ore → Time",
+    "timeLabel": "Remaining sentence",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "calcOre": "Calculate ore needed",
+    "oreResultTitle": "Mine one of these — fully:",
+    "unitsNeeded": "{count} units",
+    "oreLabel": "Ore type",
+    "quantityLabel": "Units mined",
+    "calcTime": "Calculate time reduced",
+    "timeResultTitle": "That haul removes:",
+    "perUnit": "{seconds}s / unit",
+    "emptyTime": "Enter a sentence time above.",
+    "emptyOre": "Enter a quantity above.",
+    "disclaimer": "⚠️ Approximate figures only. 1 merit = 1 second; the merit value of each ore comes from community data and is not official — CIG can retune it between patches, so treat the results as a rough estimate.",
+    "ores": {
+      "hadanite": "Hadanite",
+      "dolivine": "Dolivine",
+      "aphorite": "Aphorite"
+    }
   }
 }

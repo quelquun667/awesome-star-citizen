@@ -18,6 +18,7 @@ function hrefFor(code: Lang): string {
       class={`lang-btn ${code === lang ? 'active' : ''}`}
       href={hrefFor(code)}
       lang={code}
+      data-lang={code}
       aria-current={code === lang ? 'page' : undefined}
       title={label}
     >
@@ -26,3 +27,12 @@ function hrefFor(code: Lang): string {
     </a>
   ))}
 </div>
+
+<script>
+  // Remember an explicit language choice so the home page can honour it next time.
+  document.querySelectorAll<HTMLAnchorElement>('.lang-switcher [data-lang]').forEach((a) => {
+    a.addEventListener('click', () => {
+      try { localStorage.setItem('sc-lang', a.dataset.lang!); } catch {}
+    });
+  });
+</script>

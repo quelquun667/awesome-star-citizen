@@ -6,6 +6,13 @@
 
 **🌍 Leer en otro idioma:** [🇬🇧 English](README.md) · [🇫🇷 Français](README.fr.md)
 
+## ✨ Funciones del sitio
+
+- **Directorio interactivo** — cada herramienta de abajo como tarjetas filtrables y buscables.
+- **Hub de categorías** — navega por categoría, o busca en todo el directorio a la vez.
+- **Interfaz multilingüe** — inglés, francés y español.
+- **[Calculadora de tiempo de prisión](https://quelquun667.github.io/awesome-star-citizen/es/prison/)** — calcula cuánto mineral minar para cumplir una condena en Klescher, o cuánto tiempo reduce una cantidad.
+
 [![Star Citizen](https://img.shields.io/badge/Star%20Citizen-Comunidad-blue)](https://robertsspaceindustries.com/)
 [![Licencia: CC BY-SA 4.0](https://img.shields.io/badge/Licencia-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/deed.es)
 [![PRs Bienvenidos](https://img.shields.io/badge/PRs-bienvenidos-brightgreen.svg)](#contribuir)
@@ -45,6 +52,7 @@
 - **CCU Game** — [ccugame.app](https://ccugame.app/) — Calculador de ruta de CCU. Encuentra la cadena de upgrades más barata para alcanzar una nave objetivo. 🌐 ⚠️
 - **Hangar.link** — [hangar.link](https://hangar.link/) — Sigue y gestiona tu colección de naves enlazando tu cuenta RSI. 🌐 🔒 ⚠️
 - **StarShip 42** — [starship42.com](https://www.starship42.com/) — Visualizador 3D de naves con comparaciones de tamaño y detalles técnicos. 🌐 ⚠️
+- **SPViewer** — [spviewer.eu](https://www.spviewer.eu/) — Base de datos de rendimiento de naves: combustible, autonomía, capacitadores y stats de componentes con comparaciones lado a lado. 🌐 ⚠️
 
 ## Comercio y Logística
 
@@ -55,6 +63,8 @@
 ## Bases de datos y Referencias
 
 - **SC Unpacked** — [scunpacked.com](https://scunpacked.com/) — Datos en bruto del juego extraídos en cada parche. 🌐 ⚠️
+- **SCMDB** — [scmdb.net](https://scmdb.net/) — Base de datos de misiones de Star Citizen: misiones, recompensas, rutas de reputación, blueprints y recursos de crafting. 🌐 ⚠️
+- **CStone: Universal Item Finder** — [finder.cstone.space](https://finder.cstone.space/) — Encuentra dónde se vende cualquier objeto o componente del juego, y a qué precio. 🌐 ⚠️
 
 ## Wikis y Lore
 
@@ -63,6 +73,8 @@
 ## Mapas y Navegación
 
 - **RSI Starmap** — [robertsspaceindustries.com/starmap](https://robertsspaceindustries.com/starmap) — Mapa estelar 3D oficial del universo persistente. 🌐
+- **Cornerstone** — [cstone.space](https://cstone.space/) — Rutas del Aaron Halo, estudios planetarios y planificación de navegación. 🌐 ⚠️
+- **VerseTime** — [dydrmr.github.io/VerseTime](https://dydrmr.github.io/VerseTime/) — Hora local en juego, amanecer y atardecer para planetas y lunas. 🌐 ⚠️
 
 ## Org y Gestión de flota
 

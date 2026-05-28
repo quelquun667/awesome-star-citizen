@@ -54,11 +54,43 @@
   },
   "card": {
     "open": "Ouvrir",
-    "visit": "Visiter"
+    "visit": "Visiter",
+    "copy": "Copier le lien",
+    "copied": "Copié !"
   },
   "footer": {
     "disclaimer": "Star Citizen et toutes les ressources associées sont © Cloud Imperium Games. Ce projet est non officiel et n'est pas affilié à CIG.",
     "license": "Contenu sous licence CC BY-SA 4.0",
     "sourceOnGithub": "Source sur GitHub"
+  },
+  "nav2": {
+    "tools": "Outils",
+    "prison": "Calculateur de prison"
+  },
+  "prison": {
+    "title": "Calculateur de temps de prison",
+    "subtitle": "Réduction de peine à Klescher",
+    "tagline": "Calcule combien de minerai tu dois miner pour purger ta peine — ou combien de temps une quantité donnée fera gagner.",
+    "tabTimeToOre": "Temps → Minerai",
+    "tabOreToTime": "Minerai → Temps",
+    "timeLabel": "Peine restante",
+    "hours": "Heures",
+    "minutes": "Minutes",
+    "calcOre": "Calculer le minerai nécessaire",
+    "oreResultTitle": "Mine l'un de ces minerais — entièrement :",
+    "unitsNeeded": "{count} unités",
+    "oreLabel": "Type de minerai",
+    "quantityLabel": "Unités minées",
+    "calcTime": "Calculer le temps réduit",
+    "timeResultTitle": "Cette quantité retire :",
+    "perUnit": "{seconds}s / unité",
+    "emptyTime": "Saisis une durée de peine ci-dessus.",
+    "emptyOre": "Saisis une quantité ci-dessus.",
+    "disclaimer": "⚠️ Valeurs approximatives. 1 merit = 1 seconde ; la valeur en merits de chaque minerai vient de données communautaires et n'est pas officielle — CIG peut la modifier entre les patchs, donc considère le résultat comme une estimation grossière.",
+    "ores": {
+      "hadanite": "Hadanite",
+      "dolivine": "Dolivine",
+      "aphorite": "Aphorite"
+    }
   }
 }

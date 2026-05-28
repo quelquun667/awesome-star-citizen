@@ -54,11 +54,43 @@
   },
   "card": {
     "open": "Abrir",
-    "visit": "Visitar"
+    "visit": "Visitar",
+    "copy": "Copiar enlace",
+    "copied": "¡Copiado!"
   },
   "footer": {
     "disclaimer": "Star Citizen y todos los recursos relacionados son © Cloud Imperium Games. Este proyecto no es oficial y no está afiliado a CIG.",
     "license": "Contenido bajo licencia CC BY-SA 4.0",
     "sourceOnGithub": "Código en GitHub"
+  },
+  "nav2": {
+    "tools": "Herramientas",
+    "prison": "Calculadora de prisión"
+  },
+  "prison": {
+    "title": "Calculadora de tiempo de prisión",
+    "subtitle": "Reducción de condena en Klescher",
+    "tagline": "Calcula cuánto mineral necesitas minar para cumplir tu condena — o cuánto tiempo reduce una cantidad dada.",
+    "tabTimeToOre": "Tiempo → Mineral",
+    "tabOreToTime": "Mineral → Tiempo",
+    "timeLabel": "Condena restante",
+    "hours": "Horas",
+    "minutes": "Minutos",
+    "calcOre": "Calcular mineral necesario",
+    "oreResultTitle": "Mina uno de estos — por completo:",
+    "unitsNeeded": "{count} unidades",
+    "oreLabel": "Tipo de mineral",
+    "quantityLabel": "Unidades minadas",
+    "calcTime": "Calcular tiempo reducido",
+    "timeResultTitle": "Esa cantidad elimina:",
+    "perUnit": "{seconds}s / unidad",
+    "emptyTime": "Introduce un tiempo de condena arriba.",
+    "emptyOre": "Introduce una cantidad arriba.",
+    "disclaimer": "⚠️ Valores aproximados. 1 merit = 1 segundo; el valor en merits de cada mineral proviene de datos comunitarios y no es oficial — CIG puede ajustarlo entre parches, así que considera el resultado como una estimación aproximada.",
+    "ores": {
+      "hadanite": "Hadanite",
+      "dolivine": "Dolivine",
+      "aphorite": "Aphorite"
+    }
   }
 }
