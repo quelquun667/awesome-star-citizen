@@ -1,0 +1,160 @@
+---
+import { PRISON_ORES } from '../utils/prison';
+import { dict, type Lang } from '../utils/i18n';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = dict(lang);
+const oreNames = t.prison.ores as Record<string, string>;
+
+// Serialise ore data for the client script
+const oreData = PRISON_ORES.map((o) => ({
+  id: o.id,
+  name: oreNames[o.id] ?? o.name,
+  secondsPerUnit: o.secondsPerUnit,
+  color: o.color,
+}));
+---
+
+<section class="prison">
+  <div class="container prison-inner">
+    <div class="prison-head">
+      <h1 class="prison-title">{t.prison.title}</h1>
+      <p class="prison-tagline">{t.prison.tagline}</p>
+    </div>
+
+    <div class="prison-tabs" role="tablist">
+      <button class="prison-tab active" data-tab="time-to-ore" role="tab" aria-selected="true">{t.prison.tabTimeToOre}</button>
+      <button class="prison-tab" data-tab="ore-to-time" role="tab" aria-selected="false">{t.prison.tabOreToTime}</button>
+    </div>
+
+    <!-- Panel 1: time -> ore -->
+    <div class="prison-panel" id="panel-time-to-ore">
+      <div class="prison-form">
+        <label class="prison-field">
+          <span>{t.prison.hours}</span>
+          <input type="number" id="in-hours" min="0" step="1" value="1" inputmode="numeric" />
+        </label>
+        <label class="prison-field">
+          <span>{t.prison.minutes}</span>
+          <input type="number" id="in-minutes" min="0" max="59" step="1" value="20" inputmode="numeric" />
+        </label>
+      </div>
+      <h2 class="prison-result-title">{t.prison.oreResultTitle}</h2>
+      <div class="prison-ore-grid" id="ore-results"></div>
+    </div>
+
+    <!-- Panel 2: ore -> time -->
+    <div class="prison-panel" id="panel-ore-to-time" hidden>
+      <div class="prison-form">
+        <label class="prison-field">
+          <span>{t.prison.oreLabel}</span>
+          <select id="in-ore">
+            {oreData.map((o) => (
+              <option value={o.id}>{o.name}</option>
+            ))}
+          </select>
+        </label>
+        <label class="prison-field">
+          <span>{t.prison.quantityLabel}</span>
+          <input type="number" id="in-qty" min="0" step="1" value="10" inputmode="numeric" />
+        </label>
+      </div>
+      <h2 class="prison-result-title">{t.prison.timeResultTitle}</h2>
+      <div class="prison-time-result" id="time-result"></div>
+    </div>
+
+    <p class="prison-disclaimer">⚠️ {t.prison.disclaimer}</p>
+  </div>
+</section>
+
+<script
+  define:vars={{
+    ores: oreData,
+    unitsTpl: t.prison.unitsNeeded,
+    perUnitTpl: t.prison.perUnit,
+    emptyTime: t.prison.emptyTime,
+    emptyOre: t.prison.emptyOre,
+  }}
+>
+  function fmtDuration(totalSeconds) {
+    const s = Math.max(0, Math.round(totalSeconds));
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+    const parts = [];
+    if (h) parts.push(h + 'h');
+    if (m) parts.push(m + 'm');
+    if (sec || parts.length === 0) parts.push(sec + 's');
+    return parts.join(' ');
+  }
+
+  // --- Tabs
+  const tabs = Array.from(document.querySelectorAll('.prison-tab'));
+  const panels = {
+    'time-to-ore': document.getElementById('panel-time-to-ore'),
+    'ore-to-time': document.getElementById('panel-ore-to-time'),
+  };
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((tb) => {
+        const on = tb === tab;
+        tb.classList.toggle('active', on);
+        tb.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      for (const key in panels) panels[key].hidden = key !== tab.dataset.tab;
+    });
+  });
+
+  // --- Time -> Ore
+  const inHours = document.getElementById('in-hours');
+  const inMinutes = document.getElementById('in-minutes');
+  const oreResults = document.getElementById('ore-results');
+
+  function calcOre() {
+    const h = parseInt(inHours.value, 10) || 0;
+    const m = parseInt(inMinutes.value, 10) || 0;
+    const totalSeconds = h * 3600 + m * 60;
+    if (totalSeconds <= 0) {
+      oreResults.innerHTML = '<p class="prison-empty">' + emptyTime + '</p>';
+      return;
+    }
+    oreResults.innerHTML = ores.map((o) => {
+      const units = Math.ceil(totalSeconds / o.secondsPerUnit);
+      const unitsLabel = unitsTpl.replace('{count}', units.toLocaleString());
+      const rate = perUnitTpl.replace('{seconds}', o.secondsPerUnit);
+      return (
+        '<div class="prison-ore-card" style="--ore:' + o.color + '">' +
+          '<span class="prison-ore-name">' + o.name + '</span>' +
+          '<span class="prison-ore-units">' + unitsLabel + '</span>' +
+          '<span class="prison-ore-rate">' + rate + '</span>' +
+        '</div>'
+      );
+    }).join('');
+  }
+
+  // --- Ore -> Time
+  const inOre = document.getElementById('in-ore');
+  const inQty = document.getElementById('in-qty');
+  const timeResult = document.getElementById('time-result');
+
+  function calcTime() {
+    const qty = parseInt(inQty.value, 10) || 0;
+    const ore = ores.find((o) => o.id === inOre.value) || ores[0];
+    if (qty <= 0) {
+      timeResult.innerHTML = '<p class="prison-empty">' + emptyOre + '</p>';
+      return;
+    }
+    const seconds = qty * ore.secondsPerUnit;
+    timeResult.innerHTML =
+      '<div class="prison-time-big" style="--ore:' + ore.color + '">' + fmtDuration(seconds) + '</div>' +
+      '<div class="prison-time-sub">' + ore.name + ' × ' + qty.toLocaleString() + '</div>';
+  }
+
+  [inHours, inMinutes].forEach((el) => el.addEventListener('input', calcOre));
+  [inOre, inQty].forEach((el) => el.addEventListener('input', calcTime));
+  inOre.addEventListener('change', calcTime);
+
+  calcOre();
+  calcTime();
+</script>

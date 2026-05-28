@@ -67,6 +67,14 @@
       "flags": ["website", "community"]
     },
     {
+      "id": "spviewer",
+      "name": "SPViewer",
+      "url": "https://www.spviewer.eu/",
+      "category": "ships-gear",
+      "description": "Ship performance database — fuel, endurance, capacitors and component stats with side-by-side comparisons.",
+      "flags": ["website", "community"]
+    },
+    {
       "id": "uex-corp",
       "name": "UEX Corp",
       "url": "https://uexcorp.space/",
@@ -99,6 +107,22 @@
       "flags": ["website", "community"]
     },
     {
+      "id": "scmdb",
+      "name": "SCMDB",
+      "url": "https://scmdb.net/",
+      "category": "databases",
+      "description": "Star Citizen Mission Database — missions, rewards, reputation paths, blueprints and crafting resources.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "cstone-finder",
+      "name": "CStone: Universal Item Finder",
+      "url": "https://finder.cstone.space/",
+      "category": "databases",
+      "description": "Find where any in-game item or component is sold, and at what price.",
+      "flags": ["website", "community"]
+    },
+    {
       "id": "starcitizen-tools-wiki",
       "name": "Star Citizen Wiki",
       "url": "https://starcitizen.tools/",
@@ -113,6 +137,22 @@
       "category": "maps-navigation",
       "description": "Official 3D star map of the persistent universe.",
       "flags": ["website"]
+    },
+    {
+      "id": "cornerstone",
+      "name": "Cornerstone",
+      "url": "https://cstone.space/",
+      "category": "maps-navigation",
+      "description": "Aaron Halo travel routes, planetary surveys and navigation planning.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "versetime",
+      "name": "VerseTime",
+      "url": "https://dydrmr.github.io/VerseTime/",
+      "category": "maps-navigation",
+      "description": "Live in-game local time, sunrise and sunset for planets and moons.",
+      "flags": ["website", "community"]
     },
     {
       "id": "rsi-spectrum",

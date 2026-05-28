@@ -6,6 +6,13 @@
 
 **🌍 Read this in another language:** [🇫🇷 Français](README.fr.md) · [🇪🇸 Español](README.es.md)
 
+## ✨ Website features
+
+- **Interactive directory** — every tool below as searchable, filterable cards.
+- **Category hub** — browse by category, or search across everything at once.
+- **Multilingual UI** — English, French and Spanish.
+- **[Prison Time Calculator](https://quelquun667.github.io/awesome-star-citizen/prison/)** — work out how much ore to mine to clear a Klescher sentence, or how much time a haul will shave off.
+
 [![Star Citizen](https://img.shields.io/badge/Star%20Citizen-Community-blue)](https://robertsspaceindustries.com/)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#contributing)
@@ -45,6 +52,7 @@
 - **CCU Game** — [ccugame.app](https://ccugame.app/) — CCU upgrade path finder. Calculates the cheapest chain of upgrades to reach a target ship. 🌐 ⚠️
 - **Hangar.link** — [hangar.link](https://hangar.link/) — Track and manage your ship collection by linking your RSI account. 🌐 🔒 ⚠️
 - **StarShip 42** — [starship42.com](https://www.starship42.com/) — 3D ship viewer with size comparisons and detailed breakdowns. 🌐 ⚠️
+- **SPViewer** — [spviewer.eu](https://www.spviewer.eu/) — Ship performance database: fuel, endurance, capacitors and component stats with side-by-side comparisons. 🌐 ⚠️
 
 ## Trade & Logistics
 
@@ -55,6 +63,8 @@
 ## Databases & Reference
 
 - **SC Unpacked** — [scunpacked.com](https://scunpacked.com/) — Raw game data extracted from each patch. 🌐 ⚠️
+- **SCMDB** — [scmdb.net](https://scmdb.net/) — Star Citizen Mission Database: missions, rewards, reputation paths, blueprints and crafting resources. 🌐 ⚠️
+- **CStone: Universal Item Finder** — [finder.cstone.space](https://finder.cstone.space/) — Find where any in-game item or component is sold, and at what price. 🌐 ⚠️
 
 ## Wikis & Lore
 
@@ -63,6 +73,8 @@
 ## Maps & Navigation
 
 - **RSI Starmap** — [robertsspaceindustries.com/starmap](https://robertsspaceindustries.com/starmap) — Official 3D star map of the persistent universe. 🌐
+- **Cornerstone** — [cstone.space](https://cstone.space/) — Aaron Halo travel routes, planetary surveys and navigation planning. 🌐 ⚠️
+- **VerseTime** — [dydrmr.github.io/VerseTime](https://dydrmr.github.io/VerseTime/) — Live in-game local time, sunrise and sunset for planets and moons. 🌐 ⚠️
 
 ## Org & Fleet Management
 

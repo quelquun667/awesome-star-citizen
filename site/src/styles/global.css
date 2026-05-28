@@ -551,6 +551,11 @@ main,
   letter-spacing: 0.12em;
   color: var(--orange);
 }
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 .card-visit {
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -565,6 +570,206 @@ main,
 }
 .tool-card:hover .card-visit::after {
   transform: translateX(3px);
+}
+.card-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-dim);
+  transition: all 150ms ease;
+  position: relative;
+}
+.card-copy:hover {
+  color: var(--accent);
+  border-color: var(--border-strong);
+}
+.card-copy.copied {
+  color: var(--success);
+  border-color: var(--success);
+}
+.card-copy.copied::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
+  background: var(--bg-panel-solid);
+  border-radius: 4px;
+}
+
+/* Prison calculator */
+.prison {
+  padding: 2.5rem 0 4rem;
+}
+.prison-inner {
+  max-width: 760px;
+}
+.prison-head {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.prison-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+}
+.prison-tagline {
+  color: var(--text-dim);
+  margin: 0 auto;
+  max-width: 560px;
+  font-size: 0.98rem;
+}
+.prison-tabs {
+  display: flex;
+  gap: 0.4rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.3rem;
+  max-width: 420px;
+  margin: 0 auto 1.5rem;
+  backdrop-filter: blur(8px);
+}
+.prison-tab {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.6rem 0.8rem;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-dim);
+  transition: all 150ms ease;
+}
+.prison-tab:hover { color: var(--accent); }
+.prison-tab.active {
+  background: var(--accent);
+  color: var(--bg-deep);
+  font-weight: 700;
+}
+.prison-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  backdrop-filter: blur(8px);
+}
+.prison-form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.8rem;
+}
+.prison-field {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.prison-field span {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.prison-field input,
+.prison-field select {
+  padding: 0.7rem 0.9rem;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  outline: none;
+  transition: all 150ms ease;
+}
+.prison-field input:focus,
+.prison-field select:focus {
+  border-color: var(--accent);
+  box-shadow: var(--glow-accent);
+}
+.prison-result-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin: 0 0 1rem;
+}
+.prison-ore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.8rem;
+}
+.prison-ore-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.1rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--ore, var(--accent));
+  border-radius: var(--radius);
+  background: rgba(0,0,0,0.2);
+}
+.prison-ore-name {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+.prison-ore-units {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--ore, var(--accent));
+  line-height: 1.1;
+}
+.prison-ore-rate {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+.prison-time-result {
+  text-align: center;
+  padding: 1rem 0;
+}
+.prison-time-big {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  color: var(--ore, var(--accent));
+  letter-spacing: -0.02em;
+}
+.prison-time-sub {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-faint);
+  margin-top: 0.4rem;
+}
+.prison-empty {
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  margin: 0;
+}
+.prison-disclaimer {
+  margin: 1.2rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  text-align: center;
+  line-height: 1.5;
 }
 
 /* Language switcher */
