@@ -1,0 +1,24 @@
+name: Check for dead links
+
+on:
+  schedule:
+    # Every Monday at 06:00 UTC
+    - cron: '0 6 * * 1'
+  push:
+    branches: [main]
+    paths:
+      - 'data.json'
+      - 'scripts/check-links.mjs'
+      - '.github/workflows/check-links.yml'
+  workflow_dispatch:
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check all tool URLs in data.json
+        run: node scripts/check-links.mjs
