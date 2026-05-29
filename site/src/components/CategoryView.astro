@@ -1,6 +1,7 @@
 ---
 import { tools, categories, flagDefs, type ToolFlag } from '../utils/tools';
 import { CATEGORY_ICONS } from '../utils/categoryMeta';
+import ToolCard from './ToolCard.astro';
 import { dict, type Lang } from '../utils/i18n';
 
 interface Props { lang: Lang; categoryId: string; }
@@ -20,11 +21,6 @@ const categoryDesc = catDescs[categoryId] ?? '';
 const list = tools.filter((tool) => tool.category === categoryId);
 
 const flagOrder: ToolFlag[] = ['website', 'account-required', 'extension', 'paid', 'community'];
-
-function domain(url: string) {
-  try { return new URL(url).hostname.replace(/^www\./, ''); }
-  catch { return url; }
-}
 ---
 
 <section class="cat-header">
@@ -72,6 +68,9 @@ function domain(url: string) {
           <span>{flagLabels[f]}</span>
         </button>
       ))}
+      <button class="chip chip-flag chip-fav" data-filter="fav" aria-pressed="false">
+        <span aria-hidden="true">★</span> {t.favorites.only}
+      </button>
       <button class="chip chip-clear" id="clear-filters" type="button">{t.filters.clear}</button>
     </div>
   </div>
@@ -80,47 +79,15 @@ function domain(url: string) {
 <section class="container">
   <div class="tools-grid" id="grid">
     {list.map((tool) => (
-      <article
-        class="tool-card"
-        data-name={tool.name.toLowerCase()}
-        data-desc={tool.description.toLowerCase()}
-        data-flags={tool.flags.join(' ')}
-      >
-        <div class="card-head">
-          <div>
-            <h3 class="card-title">{tool.name}</h3>
-            <span class="card-domain">{domain(tool.url)}</span>
-          </div>
-          <div class="card-flags">
-            {tool.flags.map((f) => (
-              <span class="card-flag" title={flagLabels[f]} aria-label={flagLabels[f]}>
-                {flagDefs[f].icon}
-              </span>
-            ))}
-          </div>
-        </div>
-        <p class="card-desc">{tool.description}</p>
-        <div class="card-foot">
-          <span class="card-category">{categoryLabel}</span>
-          <div class="card-actions">
-            <button class="card-copy" type="button" data-url={tool.url} title={t.card.copy} aria-label={t.card.copy}>
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="9" y="9" width="11" height="11" rx="2"></rect>
-                <path d="M5 15V5a2 2 0 0 1 2-2h10"></path>
-              </svg>
-            </button>
-            <a class="card-visit" href={tool.url} target="_blank" rel="noopener">{t.card.visit}</a>
-          </div>
-        </div>
-      </article>
+      <ToolCard tool={tool} lang={lang} categoryLabel={categoryLabel} />
     ))}
   </div>
   <div class="no-results" id="no-results" hidden>{t.search.noResults}</div>
 </section>
 
 <script>
-  type Filter = { flags: Set<string>; query: string };
-  const state: Filter = { flags: new Set<string>(), query: '' };
+  type Filter = { flags: Set<string>; query: string; favOnly: boolean };
+  const state: Filter = { flags: new Set<string>(), query: '', favOnly: false };
 
   const grid = document.getElementById('grid') as HTMLElement;
   const cards = Array.from(grid.querySelectorAll<HTMLElement>('.tool-card'));
@@ -130,10 +97,14 @@ function domain(url: string) {
   const counterTpl = counter.dataset.template ?? '{count}';
 
   const flagChips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter="flag"]'));
+  const favChip = document.querySelector<HTMLButtonElement>('[data-filter="fav"]');
   const clearBtn = document.getElementById('clear-filters') as HTMLButtonElement;
 
   function setPressed(btn: HTMLButtonElement, on: boolean) {
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  function isFav(id: string | undefined) {
+    return !!id && (window as any).scIsFav?.(id);
   }
 
   function apply() {
@@ -143,7 +114,8 @@ function domain(url: string) {
       const text = `${card.dataset.name} ${card.dataset.desc}`;
       const matchFlags = state.flags.size === 0 || Array.from(state.flags).every((f) => flags.includes(f));
       const matchQuery = !state.query || text.includes(state.query);
-      const show = matchFlags && matchQuery;
+      const matchFav = !state.favOnly || isFav(card.dataset.id);
+      const show = matchFlags && matchQuery && matchFav;
       card.style.display = show ? '' : 'none';
       if (show) visible++;
     }
@@ -152,6 +124,7 @@ function domain(url: string) {
   }
 
   flagChips.forEach((btn) => {
+    if (btn === favChip) return;
     btn.addEventListener('click', () => {
       const v = btn.dataset.value ?? '';
       if (state.flags.has(v)) state.flags.delete(v);
@@ -161,11 +134,19 @@ function domain(url: string) {
     });
   });
 
+  favChip?.addEventListener('click', () => {
+    state.favOnly = !state.favOnly;
+    setPressed(favChip, state.favOnly);
+    apply();
+  });
+
   clearBtn.addEventListener('click', () => {
     state.flags.clear();
     state.query = '';
+    state.favOnly = false;
     search.value = '';
     flagChips.forEach((b) => setPressed(b, false));
+    if (favChip) setPressed(favChip, false);
     apply();
   });
 
@@ -174,5 +155,6 @@ function domain(url: string) {
     apply();
   });
 
+  document.addEventListener('favchange', apply);
   apply();
 </script>

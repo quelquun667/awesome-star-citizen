@@ -1,6 +1,7 @@
 ---
-import { tools, categories, flagDefs } from '../utils/tools';
+import { tools, categories } from '../utils/tools';
 import { CATEGORY_ICONS } from '../utils/categoryMeta';
+import ToolCard from './ToolCard.astro';
 import { dict, type Lang } from '../utils/i18n';
 
 interface Props { lang: Lang; }
@@ -12,17 +13,11 @@ const langPrefix = lang === 'en' ? '' : `/${lang}`;
 
 const catLabels = t.categories as Record<string, string>;
 const catDescs  = t.categoryDesc as Record<string, string>;
-const flagLabels = t.flags as Record<string, string>;
 const toolsCountTpl = t.hub.toolsCount;
 
 const counts: Record<string, number> = {};
 for (const tool of tools) {
   counts[tool.category] = (counts[tool.category] ?? 0) + 1;
-}
-
-function domain(url: string) {
-  try { return new URL(url).hostname.replace(/^www\./, ''); }
-  catch { return url; }
 }
 ---
 
@@ -42,7 +37,12 @@ function domain(url: string) {
         aria-label={t.search.placeholder}
       />
     </div>
-    <p class="hub-intro" id="hub-intro">{t.hub.intro}</p>
+    <div class="hub-subrow">
+      <p class="hub-intro" id="hub-intro">{t.hub.intro}</p>
+      <button class="chip chip-fav" id="fav-toggle" type="button" aria-pressed="false">
+        <span aria-hidden="true">★</span> {t.favorites.only}
+      </button>
+    </div>
   </div>
 </section>
 
@@ -52,42 +52,16 @@ function domain(url: string) {
     <h2 class="global-results-title">{t.hub.globalResultsTitle}</h2>
     <div class="tools-grid">
       {tools.map((tool) => (
-        <article
-          class="tool-card global-result"
-          data-name={tool.name.toLowerCase()}
-          data-desc={tool.description.toLowerCase()}
-          data-category={tool.category}
-        >
-          <div class="card-head">
-            <div>
-              <h3 class="card-title">{tool.name}</h3>
-              <span class="card-domain">{domain(tool.url)}</span>
-            </div>
-            <div class="card-flags">
-              {tool.flags.map((f) => (
-                <span class="card-flag" title={flagLabels[f]} aria-label={flagLabels[f]}>
-                  {flagDefs[f].icon}
-                </span>
-              ))}
-            </div>
-          </div>
-          <p class="card-desc">{tool.description}</p>
-          <div class="card-foot">
-            <span class="card-category">{catLabels[tool.category] ?? tool.category}</span>
-            <div class="card-actions">
-              <button class="card-copy" type="button" data-url={tool.url} title={t.card.copy} aria-label={t.card.copy}>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <rect x="9" y="9" width="11" height="11" rx="2"></rect>
-                  <path d="M5 15V5a2 2 0 0 1 2-2h10"></path>
-                </svg>
-              </button>
-              <a class="card-visit" href={tool.url} target="_blank" rel="noopener">{t.card.visit}</a>
-            </div>
-          </div>
-        </article>
+        <ToolCard
+          tool={tool}
+          lang={lang}
+          categoryLabel={catLabels[tool.category] ?? tool.category}
+          extraClass="global-result"
+        />
       ))}
     </div>
     <div class="no-results" id="global-no-results" hidden>{t.search.noResults}</div>
+    <div class="no-results" id="global-no-favs" hidden>{t.favorites.empty}</div>
   </div>
 
   <div class="cat-grid" id="cat-grid">
@@ -112,27 +86,44 @@ function domain(url: string) {
   const results = document.getElementById('global-results') as HTMLElement;
   const intro = document.getElementById('hub-intro') as HTMLElement;
   const noRes = document.getElementById('global-no-results') as HTMLElement;
+  const noFavs = document.getElementById('global-no-favs') as HTMLElement;
+  const favToggle = document.getElementById('fav-toggle') as HTMLButtonElement;
   const cards = Array.from(results.querySelectorAll<HTMLElement>('.global-result'));
+
+  let favOnly = false;
+
+  function isFav(id: string | undefined) {
+    return !!id && (window as any).scIsFav?.(id);
+  }
 
   function update() {
     const q = input.value.trim().toLowerCase();
-    if (!q) {
-      // No query: hide results, show the category hub as usual.
+    // Show the results panel when searching or browsing favorites.
+    if (!q && !favOnly) {
       results.hidden = true;
       intro.hidden = false;
       return;
     }
-    // Searching: show matching results above; keep categories visible below.
     results.hidden = false;
     intro.hidden = true;
     let visible = 0;
     for (const c of cards) {
       const text = `${c.dataset.name} ${c.dataset.desc}`;
-      const show = text.includes(q);
+      const matchQuery = !q || text.includes(q);
+      const matchFav = !favOnly || isFav(c.dataset.id);
+      const show = matchQuery && matchFav;
       c.style.display = show ? '' : 'none';
       if (show) visible++;
     }
-    noRes.hidden = visible !== 0;
+    noRes.hidden = !(visible === 0 && !favOnly);
+    noFavs.hidden = !(visible === 0 && favOnly);
   }
+
   input.addEventListener('input', update);
+  favToggle.addEventListener('click', () => {
+    favOnly = !favOnly;
+    favToggle.setAttribute('aria-pressed', favOnly ? 'true' : 'false');
+    update();
+  });
+  document.addEventListener('favchange', update);
 </script>
