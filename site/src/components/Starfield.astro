@@ -10,10 +10,7 @@
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true,
-      powerPreference: 'low-power',
+      canvas, antialias: true, alpha: true, powerPreference: 'low-power',
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
@@ -21,35 +18,66 @@
     const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
     camera.position.z = 1;
 
-    function createLayer(count: number, spread: number, size: number, color: number, opacity: number) {
-      const geometry = new THREE.BufferGeometry();
-      const positions = new Float32Array(count * 3);
+    // Gentle twinkling star layer — calm, slightly coloured, additive.
+    function makeLayer(count: number, spread: number, baseSize: number, opacity: number) {
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(count * 3);
+      const phase = new Float32Array(count);
+      const size = new Float32Array(count);
+      const col = new Float32Array(count * 3);
+      const palette = [
+        new THREE.Color('#cfd8e8'), new THREE.Color('#aebfe0'),
+        new THREE.Color('#e6d4c0'), new THREE.Color('#bcd0ea'),
+      ];
       for (let i = 0; i < count; i++) {
-        positions[i * 3]     = (Math.random() - 0.5) * spread;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * spread;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * spread;
+        pos[i * 3] = (Math.random() - 0.5) * spread;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * spread;
+        pos[i * 3 + 2] = (Math.random() - 0.5) * spread;
+        phase[i] = Math.random() * Math.PI * 2;
+        size[i] = baseSize * (0.6 + Math.random() * 0.8);
+        const c = palette[(Math.random() * palette.length) | 0];
+        col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
       }
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      const material = new THREE.PointsMaterial({
-        color, size, transparent: true, opacity,
-        sizeAttenuation: true, depthWrite: false,
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute('aPhase', new THREE.BufferAttribute(phase, 1));
+      geo.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
+      geo.setAttribute('aColor', new THREE.BufferAttribute(col, 3));
+      const mat = new THREE.ShaderMaterial({
+        uniforms: { time: { value: 0 }, opacity: { value: opacity } },
+        vertexShader: `
+          attribute float aPhase; attribute float aSize; attribute vec3 aColor;
+          uniform float time; varying vec3 vColor; varying float vTw;
+          void main() {
+            vColor = aColor;
+            vTw = 0.65 + 0.35 * sin(time + aPhase);
+            vec4 mv = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = aSize * (300.0 / -mv.z);
+            gl_Position = projectionMatrix * mv;
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vColor; varying float vTw; uniform float opacity;
+          void main() {
+            float d = length(gl_PointCoord - 0.5);
+            float a = smoothstep(0.5, 0.0, d);
+            gl_FragColor = vec4(vColor * vTw, a * vTw * opacity);
+          }
+        `,
+        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
       });
-      const points = new THREE.Points(geometry, material);
-      scene.add(points);
-      return points;
+      const pts = new THREE.Points(geo, mat);
+      scene.add(pts);
+      return { pts, mat };
     }
 
-    // Three calm star layers — softer, no neon
-    const farStars  = createLayer(1200, 900, 0.9, 0xcfd8e8, 0.55);
-    const midStars  = createLayer(500,  600, 1.3, 0x8ea7c4, 0.5);
-    const nearStars = createLayer(120,  350, 1.8, 0xa6b8d0, 0.45);
+    const far = makeLayer(1100, 900, 0.9, 0.55);
+    const mid = makeLayer(450, 600, 1.3, 0.5);
+    const near = makeLayer(110, 350, 1.8, 0.5);
 
     function resize() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      const w = window.innerWidth, h = window.innerHeight;
       renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
+      camera.aspect = w / h; camera.updateProjectionMatrix();
     }
     resize();
     window.addEventListener('resize', resize);
@@ -67,9 +95,13 @@
       requestAnimationFrame(animate);
       if (!reduceMotion) {
         t += 0.0006;
-        farStars.rotation.y  = t * 0.2;
-        midStars.rotation.y  = t * 0.35;
-        nearStars.rotation.y = t * 0.55;
+        far.pts.rotation.y = t * 0.2;
+        mid.pts.rotation.y = t * 0.35;
+        near.pts.rotation.y = t * 0.55;
+        const tw = t * 1000;
+        far.mat.uniforms.time.value = tw * 0.6;
+        mid.mat.uniforms.time.value = tw * 0.9;
+        near.mat.uniforms.time.value = tw * 1.2;
         camera.position.x += (mouse.x - camera.position.x) * 0.03;
         camera.position.y += (-mouse.y - camera.position.y) * 0.03;
         camera.lookAt(0, 0, 0);
