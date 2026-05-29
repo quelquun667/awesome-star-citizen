@@ -59,6 +59,7 @@
 - **UEX Corp** — [uexcorp.space](https://uexcorp.space/) — Marchandises, prix, routes commerciales, raffineries. Communautaire et très complet. 🌐 ⚠️
 - **SC Trade Tools** — [sc-trade.tools](https://sc-trade.tools/) — Optimiseur de routes commerciales avec calcul de bénéfices. 🌐
 - **Regolith Co** — [regolith.rocks](https://regolith.rocks/) — Tracker de coop minière, planificateur de raffinage et base de prix des minéraux. 🌐 🔒 ⚠️
+- **Cargo Grid Viewer** — [sc-cargo.space](https://sc-cargo.space/) — Visualise et compare les grilles de cargo des vaisseaux, avec un outil pour trouver quels vaisseaux peuvent contenir un ensemble de conteneurs donné. 🌐 ⚠️
 
 ## Bases de données & Références
 
