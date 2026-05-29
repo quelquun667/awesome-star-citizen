@@ -56,7 +56,26 @@
     "open": "Abrir",
     "visit": "Visitar",
     "copy": "Copiar enlace",
-    "copied": "¡Copiado!"
+    "copied": "¡Copiado!",
+    "report": "Reportar enlace caído",
+    "favorite": "Añadir a favoritos",
+    "unfavorite": "Quitar de favoritos"
+  },
+  "favorites": {
+    "only": "Solo favoritos",
+    "empty": "Aún no hay favoritos — toca la estrella de una herramienta para guardarla."
+  },
+  "contribute": {
+    "title": "Contribuir",
+    "tagline": "Este directorio es comunitario. Añadir una herramienta lleva un minuto — sin saber programar.",
+    "easyTitle": "Sugerir una herramienta (sin programar)",
+    "easyText": "Abre un breve formulario rellenado y envíalo. Un mantenedor lo revisa y lo añade.",
+    "suggestBtn": "Sugerir una herramienta",
+    "reportBtn": "Reportar enlace caído",
+    "devTitle": "Abrir un Pull Request",
+    "devText": "¿Cómodo con Git? Añade la entrada tú mismo en data.json y el README, luego abre un PR.",
+    "guideBtn": "Leer la guía de contribución",
+    "repoBtn": "Ver en GitHub"
   },
   "footer": {
     "disclaimer": "Star Citizen y todos los recursos relacionados son © Cloud Imperium Games. Este proyecto no es oficial y no está afiliado a CIG.",
@@ -65,7 +84,8 @@
   },
   "nav2": {
     "tools": "Herramientas",
-    "prison": "Calculadora de prisión"
+    "prison": "Calculadora de prisión",
+    "contribute": "Contribuir"
   },
   "prison": {
     "title": "Calculadora de tiempo de prisión",

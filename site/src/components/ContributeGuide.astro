@@ -1,0 +1,43 @@
+---
+import { dict, type Lang } from '../utils/i18n';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = dict(lang);
+
+const repo = 'https://github.com/quelquun667/awesome-star-citizen';
+const suggestUrl = `${repo}/issues/new?template=suggest-a-tool.yml`;
+const reportUrl = `${repo}/issues/new?template=report-dead-link.yml`;
+const guideUrl = `${repo}/blob/main/CONTRIBUTING.md`;
+---
+
+<section class="contribute">
+  <div class="container contribute-inner">
+    <div class="contribute-head">
+      <h1 class="contribute-title">{t.contribute.title}</h1>
+      <p class="contribute-tagline">{t.contribute.tagline}</p>
+    </div>
+
+    <div class="contribute-cards">
+      <div class="contribute-card highlight">
+        <div class="contribute-step">01</div>
+        <h2>{t.contribute.easyTitle}</h2>
+        <p>{t.contribute.easyText}</p>
+        <div class="contribute-actions">
+          <a class="btn btn-primary" href={suggestUrl} target="_blank" rel="noopener">{t.contribute.suggestBtn}</a>
+          <a class="btn btn-ghost" href={reportUrl} target="_blank" rel="noopener">{t.contribute.reportBtn}</a>
+        </div>
+      </div>
+
+      <div class="contribute-card">
+        <div class="contribute-step">02</div>
+        <h2>{t.contribute.devTitle}</h2>
+        <p>{t.contribute.devText}</p>
+        <div class="contribute-actions">
+          <a class="btn btn-ghost" href={guideUrl} target="_blank" rel="noopener">{t.contribute.guideBtn}</a>
+          <a class="btn btn-ghost" href={repo} target="_blank" rel="noopener">{t.contribute.repoBtn}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

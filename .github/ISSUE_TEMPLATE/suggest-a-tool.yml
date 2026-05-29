@@ -1,0 +1,58 @@
+name: Suggest a tool
+description: Suggest a Star Citizen tool, website or resource to add to the directory.
+title: "[Tool] "
+labels: ["tool suggestion"]
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for suggesting a tool! Fill in the fields below and a maintainer will review it."
+  - type: input
+    id: name
+    attributes:
+      label: Tool name
+      placeholder: e.g. Erkul Games
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      placeholder: https://example.com/
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Ships & Gear
+        - Trade & Logistics
+        - Databases & Reference
+        - Wikis & Lore
+        - Maps & Navigation
+        - Org & Fleet
+        - Community & News
+    validations:
+      required: true
+  - type: input
+    id: description
+    attributes:
+      label: Short description
+      description: One sentence, neutral tone.
+      placeholder: What does it do?
+    validations:
+      required: true
+  - type: checkboxes
+    id: flags
+    attributes:
+      label: Flags (tick all that apply)
+      options:
+        - label: "🔒 Requires an account / login"
+        - label: "🧩 Browser extension or app to install"
+        - label: "💰 Paid or freemium features"
+        - label: "⚠️ Community-maintained (data may lag behind patches)"
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it useful?
+      placeholder: Briefly, why should it be in the list? Is it actively maintained?

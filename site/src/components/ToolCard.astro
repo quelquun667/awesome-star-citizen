@@ -1,0 +1,77 @@
+---
+import { flagDefs, type Tool } from '../utils/tools';
+import { dict, type Lang } from '../utils/i18n';
+
+interface Props {
+  tool: Tool;
+  lang: Lang;
+  categoryLabel: string;
+  extraClass?: string;
+}
+const { tool, lang, categoryLabel, extraClass = '' } = Astro.props;
+const t = dict(lang);
+const flagLabels = t.flags as Record<string, string>;
+
+function domain(url: string) {
+  try { return new URL(url).hostname.replace(/^www\./, ''); }
+  catch { return url; }
+}
+
+const repo = 'https://github.com/quelquun667/awesome-star-citizen';
+const reportParams = new URLSearchParams({
+  template: 'report-dead-link.yml',
+  title: `[Dead link] ${tool.name}`,
+  tool: tool.name,
+  url: tool.url,
+});
+const reportHref = `${repo}/issues/new?${reportParams.toString()}`;
+---
+<article
+  class={`tool-card ${extraClass}`.trim()}
+  data-id={tool.id}
+  data-name={tool.name.toLowerCase()}
+  data-desc={tool.description.toLowerCase()}
+  data-category={tool.category}
+  data-flags={tool.flags.join(' ')}
+>
+  <div class="card-head">
+    <div>
+      <h3 class="card-title">{tool.name}</h3>
+      <span class="card-domain">{domain(tool.url)}</span>
+    </div>
+    <button class="card-fav" type="button" data-id={tool.id} aria-pressed="false"
+      title={t.card.favorite} data-fav-label={t.card.favorite} data-unfav-label={t.card.unfavorite}>
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 17.3 6.2 20.6l1.1-6.5L2.6 9.5l6.5-.9L12 2.7l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <p class="card-desc">{tool.description}</p>
+
+  <div class="card-flags-row">
+    {tool.flags.map((f) => (
+      <span class="card-flag" title={flagLabels[f]} aria-label={flagLabels[f]}>{flagDefs[f].icon}</span>
+    ))}
+  </div>
+
+  <div class="card-foot">
+    <span class="card-category">{categoryLabel}</span>
+    <div class="card-actions">
+      <a class="card-report" href={reportHref} target="_blank" rel="noopener" title={t.card.report} aria-label={t.card.report}>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </a>
+      <button class="card-copy" type="button" data-url={tool.url} title={t.card.copy} aria-label={t.card.copy}>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+          <path d="M5 15V5a2 2 0 0 1 2-2h10"></path>
+        </svg>
+      </button>
+      <a class="card-visit" href={tool.url} target="_blank" rel="noopener">{t.card.visit}</a>
+    </div>
+  </div>
+</article>

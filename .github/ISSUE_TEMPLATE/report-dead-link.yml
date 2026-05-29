@@ -1,0 +1,38 @@
+name: Report a dead link
+description: Report a tool whose link is broken, dead or redirects somewhere wrong.
+title: "[Dead link] "
+labels: ["dead link"]
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for reporting! If you opened this from the website, the tool name and URL are pre-filled below."
+  - type: input
+    id: tool
+    attributes:
+      label: Tool name
+      placeholder: e.g. Erkul Games
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: URL in the directory
+      placeholder: https://example.com/
+    validations:
+      required: true
+  - type: dropdown
+    id: problem
+    attributes:
+      label: What's wrong?
+      options:
+        - Page not found (404) / domain gone
+        - Redirects to an unrelated site
+        - Site is up but the tool no longer works
+        - Other (explain below)
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details (optional)
+      placeholder: Anything else worth knowing.
