@@ -59,6 +59,7 @@
 - **UEX Corp** — [uexcorp.space](https://uexcorp.space/) — Commodities, prices, trade routes, refineries. Community-driven, very complete. 🌐 ⚠️
 - **SC Trade Tools** — [sc-trade.tools](https://sc-trade.tools/) — Trade route optimizer with profit calculations. 🌐
 - **Regolith Co** — [regolith.rocks](https://regolith.rocks/) — Mining co-op tracker, refinery planner and mineral price database. 🌐 🔒 ⚠️
+- **Cargo Grid Viewer** — [sc-cargo.space](https://sc-cargo.space/) — Visualise and compare ship cargo grids, with a finder for which vehicles fit a given set of containers. 🌐 ⚠️
 
 ## Databases & Reference
 

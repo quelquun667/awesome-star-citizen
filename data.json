@@ -99,6 +99,14 @@
       "flags": ["website", "account-required", "community"]
     },
     {
+      "id": "sc-cargo",
+      "name": "Cargo Grid Viewer",
+      "url": "https://sc-cargo.space/",
+      "category": "trade-logistics",
+      "description": "Visualise and compare ship cargo grids, with a finder for which vehicles fit a given set of containers.",
+      "flags": ["website", "community"]
+    },
+    {
       "id": "scunpacked",
       "name": "SC Unpacked",
       "url": "https://scunpacked.com/",
