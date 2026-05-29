@@ -39,29 +39,27 @@
     camera.position.set(0, 0.4, 6);
     camera.lookAt(0, 0, 0);
 
-    // ===== Lighting — soft & moody
-    const hemi = new THREE.HemisphereLight(0x6b8cc4, 0x0a0e1a, 0.55);
+    // Sun direction (world space) — drives lighting, atmosphere and city lights.
+    const SUN = new THREE.Vector3(4, 2.5, 3).normalize();
+
+    // ===== Lighting
+    const hemi = new THREE.HemisphereLight(0x6b8cc4, 0x0a0e1a, 0.5);
     scene.add(hemi);
-
-    const sun = new THREE.DirectionalLight(0xfff0d8, 0.85);
-    sun.position.set(4, 2.5, 3);
+    const sun = new THREE.DirectionalLight(0xfff0d8, 1.0);
+    sun.position.copy(SUN);
     scene.add(sun);
-
-    const rim = new THREE.DirectionalLight(0x6aa4d8, 0.3);
+    const rim = new THREE.DirectionalLight(0x6aa4d8, 0.25);
     rim.position.set(-3, -1, -2);
     scene.add(rim);
 
-    // ===== Planet group (orbits everything around the center)
+    // ===== Planet group
     const orbitRoot = new THREE.Group();
     scene.add(orbitRoot);
 
-    // --- Main planet — smooth low-poly sphere (no aggressive vertex displacement)
     const planetRadius = 1.5;
     const planetGeo = new THREE.IcosahedronGeometry(planetRadius, 5);
     const ppos = planetGeo.attributes.position as THREE.BufferAttribute;
     const v = new THREE.Vector3();
-
-    // Per-vertex colors: subtle continents/oceans
     const pcol = new Float32Array(ppos.count * 3);
     const cOcean = new THREE.Color('#23314f');
     const cLand  = new THREE.Color('#4a6989');
@@ -76,150 +74,215 @@
       if (noise > 0.6) color = cLand.clone();
       else if (noise < -0.6) color = cOcean.clone();
       else color = cOcean.clone().lerp(cLand, (noise + 0.6) / 1.2);
-
-      // ice caps near the poles
       const latitude = Math.abs(v.y / planetRadius);
       if (latitude > 0.78) color.lerp(cIce, (latitude - 0.78) / 0.22 * 0.8);
-
-      pcol[i * 3]     = color.r;
-      pcol[i * 3 + 1] = color.g;
-      pcol[i * 3 + 2] = color.b;
+      pcol[i * 3] = color.r; pcol[i * 3 + 1] = color.g; pcol[i * 3 + 2] = color.b;
     }
     planetGeo.setAttribute('color', new THREE.BufferAttribute(pcol, 3));
-
     const planetMat = new THREE.MeshStandardMaterial({
-      vertexColors: true,
-      flatShading: true,
-      roughness: 0.85,
-      metalness: 0.08,
+      vertexColors: true, flatShading: true, roughness: 0.85, metalness: 0.08,
     });
     const planet = new THREE.Mesh(planetGeo, planetMat);
     orbitRoot.add(planet);
 
-    // --- Cloud layer (separate transparent sphere just above surface)
-    const cloudGeo = new THREE.SphereGeometry(planetRadius * 1.025, 48, 48);
-    const cloudCanvas = document.createElement('canvas');
-    cloudCanvas.width = 512; cloudCanvas.height = 256;
-    const cctx = cloudCanvas.getContext('2d')!;
-    cctx.fillStyle = 'rgba(0,0,0,0)';
-    cctx.fillRect(0, 0, 512, 256);
-    for (let i = 0; i < 60; i++) {
-      const x = Math.random() * 512, y = Math.random() * 256;
-      const r = 15 + Math.random() * 35;
-      const g2 = cctx.createRadialGradient(x, y, 0, x, y, r);
-      g2.addColorStop(0, 'rgba(220, 230, 245, 0.45)');
-      g2.addColorStop(1, 'rgba(220, 230, 245, 0)');
-      cctx.fillStyle = g2;
-      cctx.beginPath();
-      cctx.arc(x, y, r, 0, Math.PI * 2);
-      cctx.fill();
+    // ===== Night-side city lights (additive shader overlay, rotates with planet)
+    const cityCanvas = document.createElement('canvas');
+    cityCanvas.width = 1024; cityCanvas.height = 512;
+    const ctx = cityCanvas.getContext('2d')!;
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 1024, 512);
+    for (let i = 0; i < 700; i++) {
+      // cluster cities away from the poles
+      const lat = (Math.random() - 0.5);
+      const y = (lat * 0.8 + 0.5) * 512;
+      const x = Math.random() * 1024;
+      const warm = 180 + Math.random() * 75;
+      ctx.fillStyle = `rgb(255, ${warm | 0}, ${(warm * 0.55) | 0})`;
+      ctx.fillRect(x, y, Math.random() < 0.15 ? 2 : 1, Math.random() < 0.15 ? 2 : 1);
     }
-    const cloudTex = new THREE.CanvasTexture(cloudCanvas);
-    cloudTex.wrapS = THREE.RepeatWrapping;
-    const cloudMat = new THREE.MeshStandardMaterial({
-      map: cloudTex, transparent: true, opacity: 0.55,
-      depthWrite: false, roughness: 1.0, metalness: 0,
-    });
-    const clouds = new THREE.Mesh(cloudGeo, cloudMat);
-    orbitRoot.add(clouds);
-
-    // --- Atmosphere halo (fresnel back-side)
-    const atmoGeo = new THREE.SphereGeometry(planetRadius * 1.18, 48, 48);
-    const atmoMat = new THREE.ShaderMaterial({
-      uniforms: { glowColor: { value: new THREE.Color('#6b9fd8') } },
+    const cityTex = new THREE.CanvasTexture(cityCanvas);
+    const cityMat = new THREE.ShaderMaterial({
+      uniforms: { tDots: { value: cityTex }, sunDir: { value: SUN.clone() }, time: { value: 0 } },
       vertexShader: `
-        varying vec3 vNormal;
+        varying vec3 vNormalW; varying vec2 vUv;
         void main() {
-          vNormal = normalize(normalMatrix * normal);
+          vUv = uv;
+          vNormalW = normalize(mat3(modelMatrix) * normal);
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
       `,
       fragmentShader: `
-        varying vec3 vNormal;
-        uniform vec3 glowColor;
+        uniform sampler2D tDots; uniform vec3 sunDir; uniform float time;
+        varying vec3 vNormalW; varying vec2 vUv;
         void main() {
-          float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.2);
-          gl_FragColor = vec4(glowColor, intensity * 0.55);
+          float ndl = dot(normalize(vNormalW), sunDir);
+          float night = smoothstep(0.15, -0.25, ndl);
+          vec4 d = texture2D(tDots, vUv);
+          float flick = 0.7 + 0.3 * sin(time * 2.0 + vUv.x * 90.0 + vUv.y * 50.0);
+          float a = max(max(d.r, d.g), d.b);
+          gl_FragColor = vec4(d.rgb * night * flick, a * night);
         }
       `,
-      side: THREE.BackSide, blending: THREE.AdditiveBlending,
-      transparent: true, depthWrite: false,
+      transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
     });
-    const atmo = new THREE.Mesh(atmoGeo, atmoMat);
-    orbitRoot.add(atmo);
+    const cityLights = new THREE.Mesh(new THREE.SphereGeometry(planetRadius * 1.004, 64, 64), cityMat);
+    planet.add(cityLights);
 
-    // --- Subtle ring (thin, tilted)
+    // ===== Clouds
+    const cloudCanvas = document.createElement('canvas');
+    cloudCanvas.width = 512; cloudCanvas.height = 256;
+    const cctx = cloudCanvas.getContext('2d')!;
+    for (let i = 0; i < 60; i++) {
+      const x = Math.random() * 512, y = Math.random() * 256, r = 15 + Math.random() * 35;
+      const g = cctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, 'rgba(220, 230, 245, 0.45)');
+      g.addColorStop(1, 'rgba(220, 230, 245, 0)');
+      cctx.fillStyle = g; cctx.beginPath(); cctx.arc(x, y, r, 0, Math.PI * 2); cctx.fill();
+    }
+    const cloudTex = new THREE.CanvasTexture(cloudCanvas);
+    cloudTex.wrapS = THREE.RepeatWrapping;
+    const clouds = new THREE.Mesh(
+      new THREE.SphereGeometry(planetRadius * 1.025, 48, 48),
+      new THREE.MeshStandardMaterial({ map: cloudTex, transparent: true, opacity: 0.5, depthWrite: false, roughness: 1 })
+    );
+    orbitRoot.add(clouds);
+
+    // ===== Two-layer atmosphere (fake bloom via additive)
+    function makeAtmosphere(scale: number, power: number, strength: number, color: string) {
+      return new THREE.Mesh(
+        new THREE.SphereGeometry(planetRadius * scale, 48, 48),
+        new THREE.ShaderMaterial({
+          uniforms: { glowColor: { value: new THREE.Color(color) }, power: { value: power }, strength: { value: strength } },
+          vertexShader: `
+            varying vec3 vNormal;
+            void main() { vNormal = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+          `,
+          fragmentShader: `
+            varying vec3 vNormal; uniform vec3 glowColor; uniform float power; uniform float strength;
+            void main() {
+              float i = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), power);
+              gl_FragColor = vec4(glowColor, i * strength);
+            }
+          `,
+          side: THREE.BackSide, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false,
+        })
+      );
+    }
+    orbitRoot.add(makeAtmosphere(1.14, 2.6, 0.6, '#6b9fd8')); // tight bright rim
+    orbitRoot.add(makeAtmosphere(1.35, 2.0, 0.25, '#5f86c4')); // soft outer halo
+
+    // ===== Ring
     const ringGeo = new THREE.RingGeometry(2.05, 2.45, 128, 1);
-    // fade the ring with vertex colors (radial gradient)
     const rgcount = ringGeo.attributes.position.count;
     const rgcol = new Float32Array(rgcount * 3);
     for (let i = 0; i < rgcount; i++) {
-      const x = ringGeo.attributes.position.getX(i);
-      const y = ringGeo.attributes.position.getY(i);
-      const r = Math.sqrt(x*x + y*y);
-      const t = (r - 2.05) / 0.4;
-      const intensity = Math.sin(t * Math.PI); // fade at both edges
-      rgcol[i * 3]     = 0.55 * intensity;
-      rgcol[i * 3 + 1] = 0.65 * intensity;
-      rgcol[i * 3 + 2] = 0.8  * intensity;
+      const x = ringGeo.attributes.position.getX(i), y = ringGeo.attributes.position.getY(i);
+      const r = Math.sqrt(x * x + y * y);
+      const tt = (r - 2.05) / 0.4;
+      const intensity = Math.sin(tt * Math.PI);
+      rgcol[i * 3] = 0.55 * intensity; rgcol[i * 3 + 1] = 0.65 * intensity; rgcol[i * 3 + 2] = 0.8 * intensity;
     }
     ringGeo.setAttribute('color', new THREE.BufferAttribute(rgcol, 3));
-    const ringMat = new THREE.MeshBasicMaterial({
-      vertexColors: true, side: THREE.DoubleSide,
-      transparent: true, opacity: 0.6, depthWrite: false,
-    });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.rotation.x = Math.PI * 0.45;
-    ring.rotation.z = 0.2;
+    const ring = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({
+      vertexColors: true, side: THREE.DoubleSide, transparent: true, opacity: 0.6, depthWrite: false,
+    }));
+    ring.rotation.x = Math.PI * 0.45; ring.rotation.z = 0.2;
     orbitRoot.add(ring);
 
-    // ===== Moon (orbits around the planet)
+    // ===== Moon
     const moonOrbit = new THREE.Group();
-    moonOrbit.rotation.x = -0.3;
-    moonOrbit.rotation.z = 0.1;
+    moonOrbit.rotation.x = -0.3; moonOrbit.rotation.z = 0.1;
     scene.add(moonOrbit);
-
-    const moonRadius = 0.32;
-    const moonGeo = new THREE.IcosahedronGeometry(moonRadius, 3);
-    const moonMat = new THREE.MeshStandardMaterial({
-      color: 0x9aa5b8, flatShading: true, roughness: 1, metalness: 0,
-    });
-    const moon = new THREE.Mesh(moonGeo, moonMat);
+    const moon = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.32, 3),
+      new THREE.MeshStandardMaterial({ color: 0x9aa5b8, flatShading: true, roughness: 1 })
+    );
     moon.position.set(3.0, 0, 0);
     moonOrbit.add(moon);
 
-    // ===== Distant tiny stars in the local scene
-    const distantStarsGeo = new THREE.BufferGeometry();
-    const sCount = 250;
-    const sPos = new Float32Array(sCount * 3);
-    for (let i = 0; i < sCount; i++) {
-      const r = 30 + Math.random() * 50;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      sPos[i*3]     = r * Math.sin(phi) * Math.cos(theta);
-      sPos[i*3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      sPos[i*3 + 2] = r * Math.cos(phi);
+    // ===== Twinkling, coloured stars (shader points)
+    function makeStars(count: number, spread: number, near: number) {
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(count * 3);
+      const phase = new Float32Array(count);
+      const size = new Float32Array(count);
+      const col = new Float32Array(count * 3);
+      const palette = [
+        new THREE.Color('#ffffff'), new THREE.Color('#cfe0ff'),
+        new THREE.Color('#ffd9b0'), new THREE.Color('#aecbff'),
+      ];
+      for (let i = 0; i < count; i++) {
+        const r = near + Math.random() * spread;
+        const th = Math.random() * Math.PI * 2;
+        const ph = Math.acos(2 * Math.random() - 1);
+        pos[i * 3] = r * Math.sin(ph) * Math.cos(th);
+        pos[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th);
+        pos[i * 3 + 2] = r * Math.cos(ph);
+        phase[i] = Math.random() * Math.PI * 2;
+        size[i] = 6 + Math.random() * 16;
+        const c = palette[(Math.random() * palette.length) | 0];
+        col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
+      }
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute('aPhase', new THREE.BufferAttribute(phase, 1));
+      geo.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
+      geo.setAttribute('aColor', new THREE.BufferAttribute(col, 3));
+      const mat = new THREE.ShaderMaterial({
+        uniforms: { time: { value: 0 } },
+        vertexShader: `
+          attribute float aPhase; attribute float aSize; attribute vec3 aColor;
+          uniform float time; varying vec3 vColor; varying float vTw;
+          void main() {
+            vColor = aColor;
+            vTw = 0.55 + 0.45 * sin(time * 1.4 + aPhase);
+            vec4 mv = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = aSize / -mv.z;
+            gl_Position = projectionMatrix * mv;
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vColor; varying float vTw;
+          void main() {
+            float d = length(gl_PointCoord - 0.5);
+            float a = smoothstep(0.5, 0.0, d);
+            gl_FragColor = vec4(vColor * vTw, a * vTw);
+          }
+        `,
+        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+      });
+      const pts = new THREE.Points(geo, mat);
+      scene.add(pts);
+      return mat;
     }
-    distantStarsGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
-    const distantStarsMat = new THREE.PointsMaterial({
-      color: 0xd0d8ea, size: 0.1, transparent: true, opacity: 0.7,
-      sizeAttenuation: true, depthWrite: false,
-    });
-    const distantStars = new THREE.Points(distantStarsGeo, distantStarsMat);
-    scene.add(distantStars);
+    const starMat = makeStars(320, 60, 25);
+
+    // ===== Sun glint (bright additive sprite behind the planet)
+    const glintTex = (() => {
+      const c = document.createElement('canvas'); c.width = c.height = 128;
+      const g2 = c.getContext('2d')!;
+      const grd = g2.createRadialGradient(64, 64, 0, 64, 64, 64);
+      grd.addColorStop(0, 'rgba(255,245,220,1)');
+      grd.addColorStop(0.25, 'rgba(255,235,190,0.55)');
+      grd.addColorStop(1, 'rgba(255,235,190,0)');
+      g2.fillStyle = grd; g2.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(c);
+    })();
+    const glint = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: glintTex, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: 0.9,
+    }));
+    glint.scale.set(2.4, 2.4, 1);
+    glint.position.copy(SUN).multiplyScalar(8);
+    scene.add(glint);
 
     // ===== Resize
     function resize() {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
+      const w = canvas.clientWidth, h = canvas.clientHeight;
       renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
+      camera.aspect = w / h; camera.updateProjectionMatrix();
     }
     resize();
     window.addEventListener('resize', resize);
 
-    // ===== Interaction (subtle parallax)
+    // ===== Interaction + drift
     const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
     if (!reduceMotion) {
       canvas.parentElement?.addEventListener('pointermove', (e) => {
@@ -229,22 +292,27 @@
       });
     }
 
-    // ===== Animation
     let t = 0;
     function animate() {
       requestAnimationFrame(animate);
       if (!reduceMotion) {
         t += 0.0035;
         planet.rotation.y = t * 0.8;
-        clouds.rotation.y = t * 1.2;       // clouds drift slightly faster
-        ring.rotation.z   = 0.2 + t * 0.15;
+        clouds.rotation.y = t * 1.2;
+        ring.rotation.z = 0.2 + t * 0.15;
         moonOrbit.rotation.y = t * 0.4;
         moon.rotation.y = -t * 1.5;
+        cityMat.uniforms.time.value = t * 60;
+        starMat.uniforms.time.value = t * 60;
 
+        // Mouse parallax + gentle constant drift so it breathes on its own.
         mouse.x += (mouse.tx - mouse.x) * 0.04;
         mouse.y += (mouse.ty - mouse.y) * 0.04;
-        orbitRoot.rotation.z = mouse.x * 0.25;
-        orbitRoot.position.y = -mouse.y * 0.2;
+        const driftX = Math.sin(t * 0.5) * 0.12;
+        const driftY = Math.cos(t * 0.37) * 0.08;
+        camera.position.x = mouse.x + driftX;
+        camera.position.y = 0.4 - mouse.y + driftY;
+        camera.lookAt(0, 0, 0);
       }
       renderer.render(scene, camera);
     }
