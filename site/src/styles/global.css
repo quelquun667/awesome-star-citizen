@@ -70,19 +70,7 @@ button {
   pointer-events: none;
 }
 
-/* Vignette + nebula glow above the canvas */
-.bg-glow {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 25% 15%, rgba(122, 166, 216, 0.08), transparent 55%),
-    radial-gradient(ellipse at 80% 85%, rgba(216, 150, 106, 0.05), transparent 60%),
-    radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
-}
-
-/* Make sure content sits above the background layers */
+/* Make sure content sits above the background canvas */
 .site-header,
 main,
 .site-footer {
@@ -170,7 +158,7 @@ main,
 
 /* Hero */
 .hero {
-  padding: 2rem 0 2rem;
+  padding: 5rem 0 3rem;
   text-align: center;
 }
 .hero-tag {
