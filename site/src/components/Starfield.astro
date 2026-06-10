@@ -10,104 +10,182 @@
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const renderer = new THREE.WebGLRenderer({
-      canvas, antialias: true, alpha: true, powerPreference: 'low-power',
+      canvas, antialias: false, alpha: false, powerPreference: 'high-performance',
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    // The nebula is soft — a slightly reduced pixel ratio is invisible and much cheaper.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
-    camera.position.z = 1;
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-    // Gentle twinkling star layer — calm, slightly coloured, additive.
-    function makeLayer(count: number, spread: number, baseSize: number, opacity: number) {
-      const geo = new THREE.BufferGeometry();
-      const pos = new Float32Array(count * 3);
-      const phase = new Float32Array(count);
-      const size = new Float32Array(count);
-      const col = new Float32Array(count * 3);
-      const palette = [
-        new THREE.Color('#cfd8e8'), new THREE.Color('#aebfe0'),
-        new THREE.Color('#e6d4c0'), new THREE.Color('#bcd0ea'),
-      ];
-      for (let i = 0; i < count; i++) {
-        pos[i * 3] = (Math.random() - 0.5) * spread;
-        pos[i * 3 + 1] = (Math.random() - 0.5) * spread;
-        pos[i * 3 + 2] = (Math.random() - 0.5) * spread;
-        phase[i] = Math.random() * Math.PI * 2;
-        size[i] = baseSize * (0.6 + Math.random() * 0.8);
-        const c = palette[(Math.random() * palette.length) | 0];
-        col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
-      }
-      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      geo.setAttribute('aPhase', new THREE.BufferAttribute(phase, 1));
-      geo.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
-      geo.setAttribute('aColor', new THREE.BufferAttribute(col, 3));
-      const mat = new THREE.ShaderMaterial({
-        uniforms: { time: { value: 0 }, opacity: { value: opacity } },
-        vertexShader: `
-          attribute float aPhase; attribute float aSize; attribute vec3 aColor;
-          uniform float time; varying vec3 vColor; varying float vTw;
-          void main() {
-            vColor = aColor;
-            vTw = 0.65 + 0.35 * sin(time + aPhase);
-            vec4 mv = modelViewMatrix * vec4(position, 1.0);
-            gl_PointSize = aSize * (300.0 / -mv.z);
-            gl_Position = projectionMatrix * mv;
-          }
-        `,
-        fragmentShader: `
-          varying vec3 vColor; varying float vTw; uniform float opacity;
-          void main() {
-            float d = length(gl_PointCoord - 0.5);
-            float a = smoothstep(0.5, 0.0, d);
-            gl_FragColor = vec4(vColor * vTw, a * vTw * opacity);
-          }
-        `,
-        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
-      });
-      const pts = new THREE.Points(geo, mat);
-      scene.add(pts);
-      return { pts, mat };
-    }
+    const uniforms = {
+      uTime: { value: 0 },
+      uRes: { value: new THREE.Vector2(1, 1) },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+    };
 
-    const far = makeLayer(1100, 900, 0.9, 0.55);
-    const mid = makeLayer(450, 600, 1.3, 0.5);
-    const near = makeLayer(110, 350, 1.8, 0.5);
+    const material = new THREE.ShaderMaterial({
+      uniforms,
+      depthWrite: false,
+      depthTest: false,
+      vertexShader: /* glsl */ `
+        void main() {
+          gl_Position = vec4(position.xy, 0.0, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform vec2 uRes;
+        uniform float uTime;
+        uniform vec2 uMouse;
+
+        float hash21(vec2 p) {
+          p = fract(p * vec2(234.34, 435.345));
+          p += dot(p, p + 34.23);
+          return fract(p.x * p.y);
+        }
+
+        float vnoise(vec2 p) {
+          vec2 i = floor(p), f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          float a = hash21(i);
+          float b = hash21(i + vec2(1.0, 0.0));
+          float c = hash21(i + vec2(0.0, 1.0));
+          float d = hash21(i + vec2(1.0, 1.0));
+          return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+        }
+
+        float fbm(vec2 p) {
+          float v = 0.0;
+          float a = 0.5;
+          mat2 m = mat2(1.6, 1.2, -1.2, 1.6);
+          for (int i = 0; i < 5; i++) {
+            v += a * vnoise(p);
+            p = m * p;
+            a *= 0.55;
+          }
+          return v;
+        }
+
+        // Domain-warped fbm nebula (Inigo Quilez style) tinted to the site palette.
+        vec3 nebula(vec2 p, float t) {
+          vec2 q = vec2(fbm(p + t * 0.02), fbm(p + vec2(5.2, 1.3) - t * 0.015));
+          vec2 r = vec2(fbm(p + 2.4 * q + vec2(1.7, 9.2)), fbm(p + 2.4 * q + vec2(8.3, 2.8)));
+          float f = fbm(p + 2.0 * r);
+
+          vec3 deep   = vec3(0.027, 0.035, 0.080);
+          vec3 indigo = vec3(0.075, 0.110, 0.250);
+          vec3 violet = vec3(0.260, 0.200, 0.460);
+          vec3 blue   = vec3(0.420, 0.580, 0.820);
+          vec3 ember  = vec3(0.850, 0.560, 0.380);
+
+          vec3 col = mix(deep, indigo, smoothstep(0.15, 0.60, f));
+          col = mix(col, violet, smoothstep(0.45, 0.80, f) * smoothstep(0.25, 0.75, q.y));
+          col = mix(col, blue,   smoothstep(0.62, 0.95, f) * r.x * 0.55);
+          col = mix(col, ember,  smoothstep(0.70, 1.05, f) * smoothstep(0.55, 0.95, r.y) * 0.30);
+          col *= 0.45 + 1.1 * f;
+          return col;
+        }
+
+        // One sparse star per grid cell, twinkling.
+        float starLayer(vec2 uv, float scale, float t, float seed) {
+          vec2 p = uv * scale;
+          vec2 id = floor(p);
+          vec2 gv = fract(p) - 0.5;
+          float h = hash21(id + seed);
+          float star = 0.0;
+          if (h > 0.91) {
+            vec2 ofs = vec2(hash21(id + seed + 1.1), hash21(id + seed + 2.7)) - 0.5;
+            float d = length(gv - ofs * 0.7);
+            float size = 0.025 + 0.06 * fract(h * 13.7);
+            float tw = 0.65 + 0.35 * sin(t * (0.8 + fract(h * 7.3) * 2.2) + h * 60.0);
+            star = smoothstep(size, 0.0, d) * tw;
+          }
+          return star;
+        }
+
+        // Bright star with a soft glow and diffraction spikes.
+        vec3 brightStar(vec2 d, vec3 color, float t, float ph) {
+          float dist = length(d);
+          float tw = 0.85 + 0.15 * sin(t * 0.7 + ph);
+          float glow = exp(-dist * dist * 700.0) + exp(-dist * dist * 50.0) * 0.12;
+          float spikes = exp(-abs(d.x) * 160.0) * exp(-abs(d.y) * 7.0)
+                       + exp(-abs(d.y) * 160.0) * exp(-abs(d.x) * 7.0);
+          return color * (glow + spikes * 0.55) * tw;
+        }
+
+        void main() {
+          vec2 frag = gl_FragCoord.xy;
+          vec2 uv = (frag - 0.5 * uRes) / uRes.y;
+
+          vec2 par = uMouse * 0.06;
+
+          // Base nebula
+          vec2 np = uv * 1.9 + vec2(0.0, 0.15) + par * 0.5;
+          vec3 col = nebula(np, uTime * 0.6) * 0.8;
+
+          // Denser diagonal band, like a distant galactic plane
+          float band = exp(-pow(dot(uv, normalize(vec2(0.35, 1.0))) - 0.05, 2.0) * 4.5);
+          col += nebula(np * 1.7 + vec2(3.1, 1.2), uTime * 0.45) * band * 0.30;
+
+          // Three parallax star layers
+          float s = 0.0;
+          s += starLayer(uv + par * 1.6, 18.0, uTime, 0.0) * 0.9;
+          s += starLayer(uv + par * 1.0, 32.0, uTime, 4.7) * 0.55;
+          s += starLayer(uv + par * 0.6, 56.0, uTime, 9.3) * 0.35;
+          col += vec3(0.85, 0.90, 1.0) * s;
+
+          // A few bright accent stars
+          col += brightStar(uv - vec2(-0.58,  0.26) - par * 1.3, vec3(0.75, 0.85, 1.00) * 0.80, uTime, 0.0);
+          col += brightStar(uv - vec2( 0.64, -0.20) - par * 1.3, vec3(1.00, 0.80, 0.60) * 0.60, uTime, 2.1);
+          col += brightStar(uv - vec2( 0.30,  0.38) - par * 1.3, vec3(0.85, 0.90, 1.00) * 0.45, uTime, 4.2);
+
+          // Vignette keeps the edges dark so content stays readable
+          float vig = 1.0 - 0.5 * smoothstep(0.45, 1.25, length(uv));
+          col *= vig;
+
+          // Dither to avoid banding on the dark gradients
+          col += (hash21(frag + fract(uTime)) - 0.5) * (3.0 / 255.0);
+
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `,
+    });
+
+    const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+    quad.frustumCulled = false;
+    scene.add(quad);
 
     function resize() {
-      const w = window.innerWidth, h = window.innerHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h; camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight, false);
+      renderer.getDrawingBufferSize(uniforms.uRes.value);
+      if (reduceMotion) renderer.render(scene, camera);
     }
     resize();
     window.addEventListener('resize', resize);
 
-    const mouse = { x: 0, y: 0 };
-    if (!reduceMotion) {
-      window.addEventListener('pointermove', (e) => {
-        mouse.x = (e.clientX / window.innerWidth - 0.5) * 0.2;
-        mouse.y = (e.clientY / window.innerHeight - 0.5) * 0.2;
-      });
-    }
-
-    let t = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      if (!reduceMotion) {
-        t += 0.0006;
-        far.pts.rotation.y = t * 0.2;
-        mid.pts.rotation.y = t * 0.35;
-        near.pts.rotation.y = t * 0.55;
-        const tw = t * 1000;
-        far.mat.uniforms.time.value = tw * 0.6;
-        mid.mat.uniforms.time.value = tw * 0.9;
-        near.mat.uniforms.time.value = tw * 1.2;
-        camera.position.x += (mouse.x - camera.position.x) * 0.03;
-        camera.position.y += (-mouse.y - camera.position.y) * 0.03;
-        camera.lookAt(0, 0, 0);
-      }
+    if (reduceMotion) {
+      // Single static frame — still gorgeous, zero per-frame cost.
       renderer.render(scene, camera);
+    } else {
+      const target = { x: 0, y: 0 };
+      window.addEventListener('pointermove', (e) => {
+        target.x = e.clientX / window.innerWidth - 0.5;
+        target.y = -(e.clientY / window.innerHeight - 0.5);
+      });
+
+      // Cap at ~30fps: the drift is slow, and it halves the GPU cost.
+      let last = 0;
+      function loop(now: number) {
+        requestAnimationFrame(loop);
+        if (now - last < 33) return;
+        last = now;
+        uniforms.uTime.value = now * 0.001;
+        const m = uniforms.uMouse.value;
+        m.x += (target.x - m.x) * 0.05;
+        m.y += (target.y - m.y) * 0.05;
+        renderer.render(scene, camera);
+      }
+      requestAnimationFrame(loop);
     }
-    animate();
   }
 </script>
