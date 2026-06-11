@@ -75,6 +75,22 @@
       "flags": ["website", "community"]
     },
     {
+      "id": "hardpoint",
+      "name": "Hardpoint.io",
+      "url": "https://hardpoint.io/",
+      "category": "ships-gear",
+      "description": "Ship fitting and comparison tool with detailed component breakdowns and summary stats.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "subliminal-loadouts",
+      "name": "Subliminal Loadouts",
+      "url": "https://subliminal.gg/loadouts",
+      "category": "ships-gear",
+      "description": "Curated, optimized ship loadouts and meta build recommendations.",
+      "flags": ["website", "community"]
+    },
+    {
       "id": "uex-corp",
       "name": "UEX Corp",
       "url": "https://uexcorp.space/",
@@ -131,6 +147,14 @@
       "flags": ["website", "community"]
     },
     {
+      "id": "chris-bgb-sheet",
+      "name": "Chris BGB Spreadsheet",
+      "url": "https://docs.google.com/spreadsheets/d/1hPtkQZPNzyahafSuZlPWVj-SMnWxAw-Y5LgSIj62fq4/edit",
+      "category": "databases",
+      "description": "Community Google Sheet covering a bit of everything — ships, components, trading and more.",
+      "flags": ["website", "community"]
+    },
+    {
       "id": "starcitizen-tools-wiki",
       "name": "Star Citizen Wiki",
       "url": "https://starcitizen.tools/",
@@ -160,6 +184,14 @@
       "url": "https://dydrmr.github.io/VerseTime/",
       "category": "maps-navigation",
       "description": "Live in-game local time, sunrise and sunset for planets and moons.",
+      "flags": ["website", "community"]
+    },
+    {
+      "id": "verseguide",
+      "name": "VerseGuide",
+      "url": "https://verseguide.com/",
+      "category": "maps-navigation",
+      "description": "Location and travel guide for the persistent universe.",
       "flags": ["website", "community"]
     },
     {

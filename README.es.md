@@ -53,6 +53,8 @@
 - **Hangar.link** — [hangar.link](https://hangar.link/) — Sigue y gestiona tu colección de naves enlazando tu cuenta RSI. 🌐 🔒 ⚠️
 - **StarShip 42** — [starship42.com](https://www.starship42.com/) — Visualizador 3D de naves con comparaciones de tamaño y detalles técnicos. 🌐 ⚠️
 - **SPViewer** — [spviewer.eu](https://www.spviewer.eu/) — Base de datos de rendimiento de naves: combustible, autonomía, capacitadores y stats de componentes con comparaciones lado a lado. 🌐 ⚠️
+- **Hardpoint.io** — [hardpoint.io](https://hardpoint.io/) — Herramienta de fitting y comparación de naves con desglose detallado de componentes y stats resumidas. 🌐 ⚠️
+- **Subliminal Loadouts** — [subliminal.gg/loadouts](https://subliminal.gg/loadouts) — Loadouts de naves optimizados y recomendaciones de builds meta. 🌐 ⚠️
 
 ## Comercio y Logística
 
@@ -66,6 +68,7 @@
 - **SC Unpacked** — [scunpacked.com](https://scunpacked.com/) — Datos en bruto del juego extraídos en cada parche. 🌐 ⚠️
 - **SCMDB** — [scmdb.net](https://scmdb.net/) — Base de datos de misiones de Star Citizen: misiones, recompensas, rutas de reputación, blueprints y recursos de crafting. 🌐 ⚠️
 - **CStone: Universal Item Finder** — [finder.cstone.space](https://finder.cstone.space/) — Encuentra dónde se vende cualquier objeto o componente del juego, y a qué precio. 🌐 ⚠️
+- **Chris BGB Spreadsheet** — [Google Sheet](https://docs.google.com/spreadsheets/d/1hPtkQZPNzyahafSuZlPWVj-SMnWxAw-Y5LgSIj62fq4/edit) — Google Sheet comunitario que cubre un poco de todo: naves, componentes, comercio y más. 🌐 ⚠️
 
 ## Wikis y Lore
 
@@ -76,6 +79,7 @@
 - **RSI Starmap** — [robertsspaceindustries.com/starmap](https://robertsspaceindustries.com/starmap) — Mapa estelar 3D oficial del universo persistente. 🌐
 - **Cornerstone** — [cstone.space](https://cstone.space/) — Rutas del Aaron Halo, estudios planetarios y planificación de navegación. 🌐 ⚠️
 - **VerseTime** — [dydrmr.github.io/VerseTime](https://dydrmr.github.io/VerseTime/) — Hora local en juego, amanecer y atardecer para planetas y lunas. 🌐 ⚠️
+- **VerseGuide** — [verseguide.com](https://verseguide.com/) — Guía de ubicaciones y viajes para el universo persistente. 🌐 ⚠️
 
 ## Org y Gestión de flota
 

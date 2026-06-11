@@ -53,6 +53,8 @@
 - **Hangar.link** — [hangar.link](https://hangar.link/) — Track and manage your ship collection by linking your RSI account. 🌐 🔒 ⚠️
 - **StarShip 42** — [starship42.com](https://www.starship42.com/) — 3D ship viewer with size comparisons and detailed breakdowns. 🌐 ⚠️
 - **SPViewer** — [spviewer.eu](https://www.spviewer.eu/) — Ship performance database: fuel, endurance, capacitors and component stats with side-by-side comparisons. 🌐 ⚠️
+- **Hardpoint.io** — [hardpoint.io](https://hardpoint.io/) — Ship fitting and comparison tool with detailed component breakdowns and summary stats. 🌐 ⚠️
+- **Subliminal Loadouts** — [subliminal.gg/loadouts](https://subliminal.gg/loadouts) — Curated, optimized ship loadouts and meta build recommendations. 🌐 ⚠️
 
 ## Trade & Logistics
 
@@ -66,6 +68,7 @@
 - **SC Unpacked** — [scunpacked.com](https://scunpacked.com/) — Raw game data extracted from each patch. 🌐 ⚠️
 - **SCMDB** — [scmdb.net](https://scmdb.net/) — Star Citizen Mission Database: missions, rewards, reputation paths, blueprints and crafting resources. 🌐 ⚠️
 - **CStone: Universal Item Finder** — [finder.cstone.space](https://finder.cstone.space/) — Find where any in-game item or component is sold, and at what price. 🌐 ⚠️
+- **Chris BGB Spreadsheet** — [Google Sheet](https://docs.google.com/spreadsheets/d/1hPtkQZPNzyahafSuZlPWVj-SMnWxAw-Y5LgSIj62fq4/edit) — Community Google Sheet covering a bit of everything: ships, components, trading and more. 🌐 ⚠️
 
 ## Wikis & Lore
 
@@ -76,6 +79,7 @@
 - **RSI Starmap** — [robertsspaceindustries.com/starmap](https://robertsspaceindustries.com/starmap) — Official 3D star map of the persistent universe. 🌐
 - **Cornerstone** — [cstone.space](https://cstone.space/) — Aaron Halo travel routes, planetary surveys and navigation planning. 🌐 ⚠️
 - **VerseTime** — [dydrmr.github.io/VerseTime](https://dydrmr.github.io/VerseTime/) — Live in-game local time, sunrise and sunset for planets and moons. 🌐 ⚠️
+- **VerseGuide** — [verseguide.com](https://verseguide.com/) — Location and travel guide for the persistent universe. 🌐 ⚠️
 
 ## Org & Fleet Management
 

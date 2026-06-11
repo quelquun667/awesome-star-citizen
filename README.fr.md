@@ -53,6 +53,8 @@
 - **Hangar.link** — [hangar.link](https://hangar.link/) — Suivez et gérez votre collection de vaisseaux en liant votre compte RSI. 🌐 🔒 ⚠️
 - **StarShip 42** — [starship42.com](https://www.starship42.com/) — Visualisateur 3D de vaisseaux avec comparaisons de tailles et détails techniques. 🌐 ⚠️
 - **SPViewer** — [spviewer.eu](https://www.spviewer.eu/) — Base de données de performances de vaisseaux : carburant, endurance, capacitateurs et stats de composants avec comparaisons côte à côte. 🌐 ⚠️
+- **Hardpoint.io** — [hardpoint.io](https://hardpoint.io/) — Outil de fitting et de comparaison de vaisseaux avec détail des composants et stats résumées. 🌐 ⚠️
+- **Subliminal Loadouts** — [subliminal.gg/loadouts](https://subliminal.gg/loadouts) — Loadouts de vaisseaux optimisés et recommandations de builds meta. 🌐 ⚠️
 
 ## Commerce & Logistique
 
@@ -66,6 +68,7 @@
 - **SC Unpacked** — [scunpacked.com](https://scunpacked.com/) — Données brutes du jeu extraites à chaque patch. 🌐 ⚠️
 - **SCMDB** — [scmdb.net](https://scmdb.net/) — Base de données des missions Star Citizen : missions, récompenses, chemins de réputation, blueprints et ressources de crafting. 🌐 ⚠️
 - **CStone : Universal Item Finder** — [finder.cstone.space](https://finder.cstone.space/) — Trouve où n'importe quel item ou composant est vendu, et à quel prix. 🌐 ⚠️
+- **Chris BGB Spreadsheet** — [Google Sheet](https://docs.google.com/spreadsheets/d/1hPtkQZPNzyahafSuZlPWVj-SMnWxAw-Y5LgSIj62fq4/edit) — Google Sheet communautaire qui couvre un peu de tout : vaisseaux, composants, commerce et plus. 🌐 ⚠️
 
 ## Wikis & Lore
 
@@ -76,6 +79,7 @@
 - **RSI Starmap** — [robertsspaceindustries.com/starmap](https://robertsspaceindustries.com/starmap) — Carte stellaire 3D officielle de l'univers persistant. 🌐
 - **Cornerstone** — [cstone.space](https://cstone.space/) — Routes de l'Aaron Halo, relevés planétaires et planification de navigation. 🌐 ⚠️
 - **VerseTime** — [dydrmr.github.io/VerseTime](https://dydrmr.github.io/VerseTime/) — Heure locale en jeu, lever et coucher du soleil pour les planètes et lunes. 🌐 ⚠️
+- **VerseGuide** — [verseguide.com](https://verseguide.com/) — Guide des lieux et de voyage pour l'univers persistant. 🌐 ⚠️
 
 ## Org & Gestion de flotte
 
