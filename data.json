@@ -131,6 +131,14 @@
       "flags": ["website", "community"]
     },
     {
+      "id": "star-compendium",
+      "name": "Star Compendium",
+      "url": "https://star-compendium.com/",
+      "category": "databases",
+      "description": "Multilingual Star Citizen database and toolkit with ship, component and item data, loadout planning, comparisons, maps and guides.",
+      "flags": ["website", "community"]
+    },
+    {
       "id": "scmdb",
       "name": "SCMDB",
       "url": "https://scmdb.net/",

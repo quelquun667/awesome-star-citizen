@@ -66,6 +66,7 @@
 ## Databases & Reference
 
 - **SC Unpacked** — [scunpacked.com](https://scunpacked.com/) — Raw game data extracted from each patch. 🌐 ⚠️
+- **Star Compendium** — [star-compendium.com](https://star-compendium.com/) — Multilingual Star Citizen database and toolkit with ship, component and item data, loadout planning, comparisons, maps and guides. 🌐 ⚠️
 - **SCMDB** — [scmdb.net](https://scmdb.net/) — Star Citizen Mission Database: missions, rewards, reputation paths, blueprints and crafting resources. 🌐 ⚠️
 - **CStone: Universal Item Finder** — [finder.cstone.space](https://finder.cstone.space/) — Find where any in-game item or component is sold, and at what price. 🌐 ⚠️
 - **Chris BGB Spreadsheet** — [Google Sheet](https://docs.google.com/spreadsheets/d/1hPtkQZPNzyahafSuZlPWVj-SMnWxAw-Y5LgSIj62fq4/edit) — Community Google Sheet covering a bit of everything: ships, components, trading and more. 🌐 ⚠️
