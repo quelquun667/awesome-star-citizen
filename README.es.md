@@ -51,6 +51,7 @@
 - **Ship Matrix (Oficial)** — [robertsspaceindustries.com/ship-matrix](https://robertsspaceindustries.com/ship-matrix) — Specs oficiales de las naves por CIG. Fuente autoritaria, pero actualización lenta. 🌐
 - **CCU Game** — [ccugame.app](https://ccugame.app/) — Calculador de ruta de CCU. Encuentra la cadena de upgrades más barata para alcanzar una nave objetivo. 🌐 ⚠️
 - **Hangar.link** — [hangar.link](https://hangar.link/) — Sigue y gestiona tu colección de naves enlazando tu cuenta RSI. 🌐 🔒 ⚠️
+- **Open Hangar** — [openhangar.space](https://openhangar.space/) — Extensión de navegador de código abierto que guarda localmente tu hangar, recompras y datos de cuenta, con valor de fundición/tienda, historial y exportaciones. 🧩
 - **StarShip 42** — [starship42.com](https://www.starship42.com/) — Visualizador 3D de naves con comparaciones de tamaño y detalles técnicos. 🌐 ⚠️
 - **SPViewer** — [spviewer.eu](https://www.spviewer.eu/) — Base de datos de rendimiento de naves: combustible, autonomía, capacitadores y stats de componentes con comparaciones lado a lado. 🌐 ⚠️
 - **Hardpoint.io** — [hardpoint.io](https://hardpoint.io/) — Herramienta de fitting y comparación de naves con desglose detallado de componentes y stats resumidas. 🌐 ⚠️

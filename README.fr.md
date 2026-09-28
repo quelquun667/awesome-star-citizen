@@ -51,6 +51,7 @@
 - **Ship Matrix (Officiel)** — [robertsspaceindustries.com/ship-matrix](https://robertsspaceindustries.com/ship-matrix) — Spécifications officielles des vaisseaux par CIG. Source d'autorité, mais mise à jour lente. 🌐
 - **CCU Game** — [ccugame.app](https://ccugame.app/) — Calculateur de chemin de CCU. Trouve la chaîne d'upgrades la moins chère pour atteindre un vaisseau cible. 🌐 ⚠️
 - **Hangar.link** — [hangar.link](https://hangar.link/) — Suivez et gérez votre collection de vaisseaux en liant votre compte RSI. 🌐 🔒 ⚠️
+- **Open Hangar** — [openhangar.space](https://openhangar.space/) — Extension de navigateur open source qui sauvegarde localement votre hangar, vos rachats et vos données de compte, avec valeur de fonte/boutique, historique et exports. 🧩
 - **StarShip 42** — [starship42.com](https://www.starship42.com/) — Visualisateur 3D de vaisseaux avec comparaisons de tailles et détails techniques. 🌐 ⚠️
 - **SPViewer** — [spviewer.eu](https://www.spviewer.eu/) — Base de données de performances de vaisseaux : carburant, endurance, capacitateurs et stats de composants avec comparaisons côte à côte. 🌐 ⚠️
 - **Hardpoint.io** — [hardpoint.io](https://hardpoint.io/) — Outil de fitting et de comparaison de vaisseaux avec détail des composants et stats résumées. 🌐 ⚠️

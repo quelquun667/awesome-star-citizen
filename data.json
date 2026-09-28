@@ -59,6 +59,14 @@
       "flags": ["website", "account-required", "community"]
     },
     {
+      "id": "open-hangar",
+      "name": "Open Hangar",
+      "url": "https://openhangar.space/",
+      "category": "ships-gear",
+      "description": "Open-source browser extension that saves your hangar, buy-backs and account data locally, with melt/store value, history and exports.",
+      "flags": ["extension"]
+    },
+    {
       "id": "starship42",
       "name": "StarShip 42",
       "url": "https://www.starship42.com/",
